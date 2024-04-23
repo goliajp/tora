@@ -26,12 +26,15 @@
     "@faker-js/faker": "^8.4.1",
     "@types/pidusage": "^2.0.5",
     "@unocss/reset": "^0.59.4",
+    "clsx": "^2.1.1",
+    "electron-log": "^5.1.2",
     "electron-updater": "^6.1.8",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
     "pidusage": "^3.0.2",
     "react-fps-stats": "^0.3.1",
-    "react-use": "^17.5.0"
+    "react-use": "^17.5.0",
+    "react-virtuoso": "^4.7.10"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
@@ -40,6 +43,7 @@
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
+    "@unocss/eslint-config": "0.59.2",
     "@unocss/preset-attributify": "^0.59.4",
     "@vitejs/plugin-react": "^4.2.1",
     "electron": "^30.0.1",

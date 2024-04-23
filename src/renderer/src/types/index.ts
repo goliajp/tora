@@ -3,22 +3,18 @@ export interface Stat {
    * percentage (from 0 to 100* vcore)
    */
   cpu: number
-
   /**
    * bytes
    */
   memory: number
-
   /**
    * PPID
    */
   ppid: number
-
   /**
    * PID
    */
   pid: number
-
   /**
    * ms user + system time
    */
@@ -34,3 +30,9 @@ export interface Stat {
    */
   timestamp: number
 }
+
+// export type ShowDialogOptions = {
+//   directory: boolean
+//   filters: { name: string; extensions: string[] }[]
+//   title: string
+// }

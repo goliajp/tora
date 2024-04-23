@@ -1,11 +1,15 @@
-import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import pidusage from 'pidusage'
+import log from 'electron-log'
+import fs from 'fs'
+
+let mainWindow: BrowserWindow | null = null
 
 function createWindow(): void {
   // Create the browser window.
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -17,11 +21,14 @@ function createWindow(): void {
     }
   })
 
-  win.on('ready-to-show', () => {
-    win.show()
+  mainWindow.on('ready-to-show', () => {
+    if (!mainWindow) {
+      throw new Error('"mainWindow" is not defined')
+    }
+    mainWindow.show()
   })
 
-  win.webContents.setWindowOpenHandler((details) => {
+  mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url).then()
     return { action: 'deny' }
   })
@@ -29,9 +36,9 @@ function createWindow(): void {
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    win.loadURL(process.env['ELECTRON_RENDERER_URL']).then()
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then()
   } else {
-    win.loadFile(join(__dirname, '../renderer/index.html')).then()
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then()
   }
 
   const menu = Menu.buildFromTemplate([
@@ -45,13 +52,19 @@ function createWindow(): void {
         {
           label: '性能测试',
           click: () => {
-            win.webContents.openDevTools({ mode: 'bottom' })
+            if (!mainWindow) {
+              throw new Error('"mainWindow" is not defined')
+            }
+            mainWindow.webContents.openDevTools({ mode: 'bottom' })
           },
           submenu: [
             {
               label: '长列表',
               click: () => {
-                win.webContents.send('navigate', '/perf/long-list')
+                if (!mainWindow) {
+                  throw new Error('"mainWindow" is not defined')
+                }
+                mainWindow.webContents.send('navigate', '/perf/long-list')
               }
             }
           ]
@@ -101,6 +114,39 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('get-performance-info', async () => {
   return await pidusage(process.pid)
+})
+
+ipcMain.handle(
+  'show-open-dialog',
+  (
+    _event,
+    directory = false,
+    filters: { name: string; extensions: string[] }[] = [],
+    title: string
+  ) => {
+    log.info(`Showing open dialog directory=${directory} filters=${filters.join(';')}`)
+
+    if (mainWindow === null) {
+      log.error('Aborting open dialog, mainWindow is null')
+      return []
+    }
+
+    return dialog
+      .showOpenDialog(mainWindow, {
+        properties: [directory ? 'openDirectory' : 'openFile'],
+        filters,
+        title
+      })
+      .then((value) => {
+        if (value.canceled) return []
+        return value.filePaths
+      })
+      .catch((e) => log.error(e))
+  }
+)
+
+ipcMain.handle('read-entire-file', async (_event, filepath: string) => {
+  return fs.readFileSync(filepath).toString()
 })
 
 // In this file you can include the rest of your app"s specific main process

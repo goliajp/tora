@@ -8,7 +8,6 @@ export const PerformanceInfo = () => {
 
   useInterval(async () => {
     const info = await window.api.getPerformanceInfo()
-    console.log(info)
     setPerformanceInfo(info)
   }, 1000)
 

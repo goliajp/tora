@@ -6,6 +6,17 @@ import { Stat } from '@/renderer/src/types'
 const api = {
   getPerformanceInfo: async (): Promise<Stat> => {
     return await ipcRenderer.invoke('get-performance-info')
+  },
+  //传递所有的参数给invoke的方法
+  showOpenDialog: (
+    directory: boolean,
+    filters: { name: string; extensions: string[] }[] = [],
+    title: string
+  ) => {
+    return ipcRenderer.invoke('show-open-dialog', directory, filters, title)
+  },
+  readEntireFile: async (filePath: string) => {
+    return await ipcRenderer.invoke('read-entire-file', filePath)
   }
 }
 

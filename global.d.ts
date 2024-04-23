@@ -6,6 +6,12 @@ declare global {
     electron: ElectronAPI
     api: {
       getPerformanceInfo: () => Promise<Stat>
+      showOpenDialog: (
+        directory: boolean,
+        filters: { name: string; extensions: string[] }[],
+        title: string
+      ) => Promise<string>
+      readEntireFile: (filePath: string) => Promise<string>
     }
   }
 }
