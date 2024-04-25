@@ -11,7 +11,12 @@ declare global {
         filters: { name: string; extensions: string[] }[],
         title: string
       ) => Promise<string>
-      readEntireFile: (filePath: string) => Promise<string>
+      saveFile: (
+        content: string,
+        filters: { name: string; extensions: string[] }[],
+        title: string
+      ) => Promise<string>
+      readEntireFile: (filePath: string, encoding?: undefined | BufferEncoding) => Promise<Buffer>
     }
   }
 }

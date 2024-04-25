@@ -7,7 +7,6 @@ const api = {
   getPerformanceInfo: async (): Promise<Stat> => {
     return await ipcRenderer.invoke('get-performance-info')
   },
-  //传递所有的参数给invoke的方法
   showOpenDialog: (
     directory: boolean,
     filters: { name: string; extensions: string[] }[] = [],
@@ -15,9 +14,18 @@ const api = {
   ) => {
     return ipcRenderer.invoke('show-open-dialog', directory, filters, title)
   },
-  readEntireFile: async (filePath: string) => {
-    return await ipcRenderer.invoke('read-entire-file', filePath)
-  }
+  //传递所有的参数给invoke的方法
+  saveFile: (
+    content: string,
+    filters: { name: string; extensions: string[] }[] = [],
+    title: string
+  ) => {
+    return ipcRenderer.invoke('save-file', content, filters, title)
+  },
+  readEntireFile: async (filePath: string, encoding: undefined | BufferEncoding) => {
+    return await ipcRenderer.invoke('read-entire-file', filePath, encoding)
+  },
+  getImageData: (filePath: string) => ipcRenderer.invoke('get-image-data', filePath)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -31,8 +39,6 @@ if (process.contextIsolated) {
     console.error(error)
   }
 } else {
-  // @ts-ignore (define in dts)
   window.electron = electronAPI
-  // @ts-ignore (define in dts)
   window.api = api
 }

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import pidusage from 'pidusage'
@@ -40,41 +40,41 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then()
   }
-
-  const menu = Menu.buildFromTemplate([
-    {
-      label: '设置',
-      submenu: [{ label: '系统设置' }]
-    },
-    {
-      label: '测试',
-      submenu: [
-        {
-          label: '性能测试',
-          click: () => {
-            if (!mainWindow) {
-              throw new Error('"mainWindow" is not defined')
-            }
-            mainWindow.webContents.openDevTools({ mode: 'bottom' })
-          },
-          submenu: [
-            {
-              label: '长列表',
-              click: () => {
-                if (!mainWindow) {
-                  throw new Error('"mainWindow" is not defined')
-                }
-                mainWindow.webContents.send('navigate', '/perf/long-list')
-              }
-            }
-          ]
-        },
-        { label: '关于' }
-      ]
-    }
-  ])
-
-  Menu.setApplicationMenu(menu)
+  //
+  // const menu = Menu.buildFromTemplate([
+  //   {
+  //     label: '设置',
+  //     submenu: [{ label: '系统设置' }]
+  //   },
+  //   {
+  //     label: '测试',
+  //     submenu: [
+  //       {
+  //         label: '性能测试',
+  //         click: () => {
+  //           if (!mainWindow) {
+  //             throw new Error('"mainWindow" is not defined')
+  //           }
+  //           mainWindow.webContents.openDevTools({ mode: 'bottom' })
+  //         },
+  //         submenu: [
+  //           {
+  //             label: '长列表',
+  //             click: () => {
+  //               if (!mainWindow) {
+  //                 throw new Error('"mainWindow" is not defined')
+  //               }
+  //               mainWindow.webContents.send('navigate', '/perf/long-list')
+  //             }
+  //           }
+  //         ]
+  //       },
+  //       { label: '关于' }
+  //     ]
+  //   }
+  // ])
+  //
+  // Menu.setApplicationMenu(menu)
 }
 
 // This method will be called when Electron has finished
@@ -138,6 +138,7 @@ ipcMain.handle(
         title
       })
       .then((value) => {
+        log.info(value, 'ShowOpenDialog Success')
         if (value.canceled) return []
         return value.filePaths
       })
@@ -145,9 +146,50 @@ ipcMain.handle(
   }
 )
 
-ipcMain.handle('read-entire-file', async (_event, filepath: string) => {
-  return fs.readFileSync(filepath).toString()
-})
+ipcMain.handle(
+  'save-file',
+  (
+    _event,
+    content: string,
+    filters: { name: string; extensions: string[] }[] = [],
+    title: string
+  ) => {
+    if (mainWindow === null) {
+      log.error('Aborting open dialog, mainWindow is null')
+      return []
+    }
 
+    return dialog
+      .showSaveDialog(mainWindow, {
+        filters,
+        title
+      })
+      .then((result) => {
+        if (!result.canceled && result.filePath) {
+          fs.writeFile(result.filePath, content, (err) => {
+            if (err) {
+              log.error(err)
+            } else {
+              log.info(`File saved to ${result.filePath}`)
+            }
+          })
+        }
+      })
+      .catch((e) => log.error(e))
+  }
+)
+
+ipcMain.handle(
+  'read-entire-file',
+  async (_event, filePath, encoding?: undefined | BufferEncoding) => {
+    log.info('read-entire-file start', filePath)
+    try {
+      return await fs.promises.readFile(filePath, encoding)
+    } catch (err) {
+      console.error('Failed to read file:', err)
+      return null
+    }
+  }
+)
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

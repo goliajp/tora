@@ -35,7 +35,7 @@
     "allowJs": true,
   },
   "include": [
-    "global.d.ts",
+    "**/*.ts",
     "src",
   ]
 }

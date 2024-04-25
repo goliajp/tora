@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
-import UnoCSS from 'unocss/vite'
+import tailwindcss from 'tailwindcss'
 
 export default defineConfig({
   main: {
@@ -11,12 +11,17 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
+    css: {
+      postcss: {
+        plugins: [tailwindcss]
+      }
+    },
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
         '@': resolve('src')
       }
     },
-    plugins: [UnoCSS(), react()]
+    plugins: [react()]
   }
 })

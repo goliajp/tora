@@ -6,7 +6,7 @@ const About = observer(() => {
   return (
     <div>
       about
-      <Link to={'/'}>Home</Link>
+      <Link to="/">Home</Link>
       <div>{counterStore.count}</div>
       <button onClick={() => counterStore.decrement()}>-</button>
       <button onClick={() => counterStore.increment()}>+</button>

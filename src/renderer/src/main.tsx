@@ -1,9 +1,8 @@
 import './assets/main.css'
-import '@unocss/reset/eric-meyer.css'
+import './assets/eric-meyer.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import 'virtual:uno.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
