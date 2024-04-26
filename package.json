@@ -1,5 +1,5 @@
 {
-  "name": "electron-golia",
+  "name": "electron-tora",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
@@ -16,13 +16,13 @@
     "typecheck": "yarn typecheck:node && yarn typecheck:web",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
-    "build": "yarn typecheck && electron-vite build",
+    "build": "electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "yarn build && electron-builder --dir",
-    "build:win": "electron-builder --win",
-    "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux",
-    "build:linux:arm": "electron-builder --linux --arm64"
+    "build:win": "electron-vite build && electron-builder --win",
+    "build:mac": "electron-vite build && electron-builder --mac",
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "build:linux:arm": "electron-vite build && electron-builder --linux --arm64"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",

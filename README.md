@@ -1,4 +1,4 @@
-# electron-golia
+# electron-tora
 
 An Electron application with React and TypeScript
 

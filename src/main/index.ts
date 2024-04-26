@@ -4,6 +4,8 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import pidusage from 'pidusage'
 import log from 'electron-log'
 import fs from 'fs'
+import trayIcon from '../../resources/tray.png?asset'
+import pressedIcon from '../../resources/pressed.png?asset'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -83,7 +85,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Create a tray icon
-  tray = new Tray('resources/tray.png')
+  tray = new Tray(trayIcon)
   const contextMenu = Menu.buildFromTemplate([
     { label: 'This is a tray', type: 'radio' },
     { label: 'This is a tray', type: 'radio' },
@@ -92,7 +94,7 @@ app.whenReady().then(() => {
     { label: 'This is a tray', type: 'radio' }
   ])
   tray.setToolTip('tora')
-  tray.setPressedImage('resources/pressed.png')
+  tray.setPressedImage(pressedIcon)
   tray.setContextMenu(contextMenu)
   tray.on('click', () => {
     if (!mainWindow) {

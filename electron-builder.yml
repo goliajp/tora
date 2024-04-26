@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: electron-golia-quick-start
+appId: jp.golia.app.tora
+productName: electron-tora
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: electron-golia-quick-start
+  executableName: electron-tora
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

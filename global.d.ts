@@ -2,6 +2,7 @@ import { ElectronAPI } from '@electron-toolkit/preload'
 import { Stat } from '@/renderer/src/types'
 
 declare global {
+  declare module '*.png?asset'
   interface Window {
     electron: ElectronAPI
     api: {
