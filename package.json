@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
-  "email": "ws@golia.jp",
-  "author": "ws@golia.jp",
+  "author": {
+    "name": "tora",
+    "email": "tora@golia.jp"
+  },
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
