@@ -19,10 +19,10 @@
     "build": "yarn typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "yarn build && electron-builder --dir",
-    "build:win": "yarn build && electron-builder --win",
-    "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux",
-    "build:linux:arm": "electron-vite build && electron-builder --linux --arm64"
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "build:linux:arm": "electron-builder --linux --arm64"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
