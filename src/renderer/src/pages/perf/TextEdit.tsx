@@ -4,9 +4,8 @@ import { useState } from 'react'
 // eslint-disable-next-line @typescript-eslint/ban-types
 
 const TextEdit = observer(() => {
-  const [text, setText] = useState('123')
+  const [text, setText] = useState('')
   const [isEdit, setIsEdit] = useState(false)
-  // const [path, setPath] = useState('')
 
   const importTxt = async () => {
     try {
@@ -17,7 +16,7 @@ const TextEdit = observer(() => {
       )
 
       if (fileList) {
-        const fileContent = await window.api.readEntireFile(fileList[0])
+        const fileContent = await window.api.readEntireFile(fileList[0], 'utf-8')
         setText(fileContent.toString())
       }
     } catch (e) {

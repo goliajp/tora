@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell, Tray } from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import pidusage from 'pidusage'
@@ -6,6 +6,7 @@ import log from 'electron-log'
 import fs from 'fs'
 
 let mainWindow: BrowserWindow | null = null
+let tray: Tray | null = null
 
 function createWindow(): void {
   // Create the browser window.
@@ -81,6 +82,25 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // Create a tray icon
+  tray = new Tray('resources/tray.png')
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'This is a tray', type: 'radio' },
+    { label: 'This is a tray', type: 'radio' },
+    { type: 'separator' },
+    { label: 'This is a tray', type: 'radio', checked: true },
+    { label: 'This is a tray', type: 'radio' }
+  ])
+  tray.setToolTip('tora')
+  tray.setPressedImage('resources/pressed.png')
+  tray.setContextMenu(contextMenu)
+  tray.on('click', () => {
+    if (!mainWindow) {
+      throw new Error('"mainWindow" is not defined')
+    }
+    // mainWindow.show()
+  })
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 

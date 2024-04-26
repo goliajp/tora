@@ -5,6 +5,9 @@ import LongList from '@/renderer/src/pages/perf/LongList'
 import TextEdit from '@/renderer/src/pages/perf/TextEdit'
 import BigImage from '@/renderer/src/pages/perf/BigImage.tsx'
 import MasonryLayout from '@/renderer/src/pages/perf/MasonryLayout.tsx'
+import VideoPlayer from '@/renderer/src/pages/perf/VideoPlayer.tsx'
+import SvgAnimation from '@/renderer/src/pages/perf/SvgAnimation.tsx'
+import CssAnimation from '@/renderer/src/pages/perf/CssAnimation.tsx'
 
 type RouteInfo = {
   path: string
@@ -45,6 +48,21 @@ const route: RouteInfo[] = [
         name: '瀑布流布局',
         path: '/perf/masonry-layout',
         component: MasonryLayout
+      },
+      {
+        name: '4k视频播放',
+        path: '/perf/video-player',
+        component: VideoPlayer
+      },
+      {
+        name: 'SVG动画',
+        path: '/perf/svg-animation',
+        component: SvgAnimation
+      },
+      {
+        name: 'CSS动画',
+        path: '/perf/css-animation',
+        component: CssAnimation
       }
     ]
   }

@@ -1,5 +1,5 @@
-import './assets/main.css'
 import './assets/eric-meyer.css'
+import './assets/main.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'

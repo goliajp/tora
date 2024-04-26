@@ -12,10 +12,14 @@ export const LeftRoute = () => {
               {item.name ?? item.path.substring(1)}
             </Link>
             {item.children && (
-              <div className="absolute bg-white left-20 top-2 shadow rounded-xl w-28 flex-col text-center py-2 hidden group-hover:flex z-[5]">
+              <div className="absolute bg-white left-20 top-2 shadow rounded-xl w-28 flex-col text-center py-4 hidden group-hover:flex z-[5]">
                 {item.children.map((child, childIndex) => {
                   return (
-                    <Link to={child.path} key={childIndex} className="text-black text-sm">
+                    <Link
+                      to={child.path}
+                      key={childIndex}
+                      className="text-black text-sm pb-2 last:pb-0 hover:text-blue-500"
+                    >
                       {child.name ?? child.path.substring(1)}
                     </Link>
                   )
