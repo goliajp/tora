@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useReducer, useRef } from 'react'
+import { ReactElement, useCallback, useEffect, useReducer, useRef } from 'react'
 
 interface FPSStatsProps {
   graphWidth?: number
@@ -41,15 +41,15 @@ const FPSStats = ({ graphWidth = 70 }: FPSStatsProps): ReactElement => {
   )
 
   const requestRef = useRef<number | undefined>()
-  const tick = () => {
+  const tick = useCallback(() => {
     dispatch()
     requestRef.current = requestAnimationFrame(tick)
-  }
+  }, [])
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(requestRef.current || 0)
-  }, [])
+  }, [tick])
 
   const { fps, len } = state
 

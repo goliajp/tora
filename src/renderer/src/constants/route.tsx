@@ -8,6 +8,7 @@ import MasonryLayout from '@/renderer/src/pages/perf/MasonryLayout.tsx'
 import VideoPlayer from '@/renderer/src/pages/perf/VideoPlayer.tsx'
 import SvgAnimation from '@/renderer/src/pages/perf/SvgAnimation.tsx'
 import CssAnimation from '@/renderer/src/pages/perf/CssAnimation.tsx'
+import WebSocket from '@/renderer/src/pages/perf/WebSocket.tsx'
 
 type RouteInfo = {
   path: string
@@ -63,6 +64,11 @@ const route: RouteInfo[] = [
         name: 'CSS动画',
         path: '/perf/css-animation',
         component: CssAnimation
+      },
+      {
+        name: 'WebSocket',
+        path: '/perf/web-socket',
+        component: WebSocket
       }
     ]
   }

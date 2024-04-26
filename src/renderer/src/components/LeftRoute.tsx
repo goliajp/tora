@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export const LeftRoute = () => {
   return (
-    <div className="w-24 bg-red-500 h-full fixed flex flex-col items-center py-6 left-0 top-0">
+    <div className="w-24 bg-blue-500 h-full fixed flex flex-col items-center py-6 left-0 top-0">
       {route.map((item, index) => {
         //有name就取name，没有就取path，去掉第一个字符
         return (

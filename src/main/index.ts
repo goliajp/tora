@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell, Tray } from 'electron'
+import { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, shell, Tray } from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import pidusage from 'pidusage'
@@ -80,14 +80,24 @@ function createWindow(): void {
   // Menu.setApplicationMenu(menu)
 }
 
+// app.commandLine.appendSwitch('force_high_performance_gpu')
+// app.commandLine.appendSwitch('disable-frame-rate-limit')
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+
 app.whenReady().then(() => {
   // Create a tray icon
   tray = new Tray(trayIcon)
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'This is a tray', type: 'radio' },
+    {
+      label: 'Show window',
+      type: 'radio',
+      accelerator: 'CmdOrCtrl+T',
+      click: () => {
+        mainWindow?.show()
+      }
+    },
     { label: 'This is a tray', type: 'radio' },
     { type: 'separator' },
     { label: 'This is a tray', type: 'radio', checked: true },
@@ -101,6 +111,26 @@ app.whenReady().then(() => {
       throw new Error('"mainWindow" is not defined')
     }
     // mainWindow.show()
+  })
+
+  // Register a shortcut listener.
+  const ret = globalShortcut.register('CommandOrControl+T', () => {
+    if (!mainWindow) {
+      throw new Error('"mainWindow" is not defined')
+    }
+    mainWindow.show()
+  })
+
+  if (!ret) {
+    console.log('registration failed')
+  }
+
+  app.on('will-quit', () => {
+    // 注销快捷键
+    globalShortcut.unregister('CommandOrControl+T')
+
+    // 注销所有快捷键
+    globalShortcut.unregisterAll()
   })
 
   // Set app user model id for windows

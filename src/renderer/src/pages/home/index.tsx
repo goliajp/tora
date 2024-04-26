@@ -7,7 +7,7 @@ type Props = {}
 const Home: React.FC<Props> = () => {
   return (
     <div>
-      Home
+      <div className="mx-auto text-center"> CommandOrControl+T open main window </div>
       <Link to="/about">About</Link>
     </div>
   )
