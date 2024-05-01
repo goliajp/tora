@@ -9,6 +9,8 @@ import VideoPlayer from '@/renderer/src/pages/perf/VideoPlayer.tsx'
 import SvgAnimation from '@/renderer/src/pages/perf/SvgAnimation.tsx'
 import CssAnimation from '@/renderer/src/pages/perf/CssAnimation.tsx'
 import WebSocket from '@/renderer/src/pages/perf/WebSocket.tsx'
+import Tour from '@/renderer/src/pages/feature/Tour.tsx'
+import Login from '@/renderer/src/pages/feature/Login.tsx'
 
 type RouteInfo = {
   path: string
@@ -26,6 +28,21 @@ const route: RouteInfo[] = [
   {
     path: '/about',
     component: About
+  },
+  {
+    path: '/feature',
+    children: [
+      {
+        name: '新手引导',
+        path: '/feature/tour',
+        component: Tour
+      },
+      {
+        name: '登录',
+        path: '/feature/login',
+        component: Login
+      }
+    ]
   },
   {
     path: '/perf',

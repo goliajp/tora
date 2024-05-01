@@ -18,6 +18,7 @@ declare global {
         title: string
       ) => Promise<string>
       readEntireFile: (filePath: string, encoding?: undefined | BufferEncoding) => Promise<Buffer>
+      getAppVersion: () => Promise<string>
     }
   }
 }

@@ -1,14 +1,30 @@
 import { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, shell, Tray } from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import trayIcon from '../../resources/tray.png?asset'
+import pressedIcon from '../../resources/pressed.png?asset'
 import pidusage from 'pidusage'
 import log from 'electron-log'
 import fs from 'fs'
-import trayIcon from '../../resources/tray.png?asset'
-import pressedIcon from '../../resources/pressed.png?asset'
+import { setupAutoUpdater } from './auto-updater.ts'
+import * as path from 'node:path'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
+
+//python test url
+const server = 'http://127.0.0.1:8000'
+
+if (process.defaultApp) {
+  console.log(process.argv)
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('electron-fiddle', process.execPath, [
+      path.resolve(process.argv[1])
+    ])
+  }
+} else {
+  app.setAsDefaultProtocolClient('electron-fiddle')
+}
 
 function createWindow(): void {
   // Create the browser window.
@@ -23,6 +39,12 @@ function createWindow(): void {
       sandbox: false
     }
   })
+
+  console.log(import.meta.env.MODE)
+  // 检查更新
+  if (import.meta.env.MODE !== 'development') {
+    setupAutoUpdater(server)
+  }
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
@@ -43,41 +65,6 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then()
   }
-  //
-  // const menu = Menu.buildFromTemplate([
-  //   {
-  //     label: '设置',
-  //     submenu: [{ label: '系统设置' }]
-  //   },
-  //   {
-  //     label: '测试',
-  //     submenu: [
-  //       {
-  //         label: '性能测试',
-  //         click: () => {
-  //           if (!mainWindow) {
-  //             throw new Error('"mainWindow" is not defined')
-  //           }
-  //           mainWindow.webContents.openDevTools({ mode: 'bottom' })
-  //         },
-  //         submenu: [
-  //           {
-  //             label: '长列表',
-  //             click: () => {
-  //               if (!mainWindow) {
-  //                 throw new Error('"mainWindow" is not defined')
-  //               }
-  //               mainWindow.webContents.send('navigate', '/perf/long-list')
-  //             }
-  //           }
-  //         ]
-  //       },
-  //       { label: '关于' }
-  //     ]
-  //   }
-  // ])
-  //
-  // Menu.setApplicationMenu(menu)
 }
 
 // app.commandLine.appendSwitch('force_high_performance_gpu')
@@ -87,7 +74,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 
 app.whenReady().then(() => {
-  // Create a tray icon
+  //设置托盘
   tray = new Tray(trayIcon)
   const contextMenu = Menu.buildFromTemplate([
     {
@@ -110,10 +97,10 @@ app.whenReady().then(() => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined')
     }
-    // mainWindow.show()
   })
 
   // Register a shortcut listener.
+
   const ret = globalShortcut.register('CommandOrControl+T', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined')
@@ -124,6 +111,10 @@ app.whenReady().then(() => {
   if (!ret) {
     console.log('registration failed')
   }
+
+  app.on('open-url', (_event, url) => {
+    dialog.showErrorBox('欢迎回来', `导向自: ${url}`)
+  })
 
   app.on('will-quit', () => {
     // 注销快捷键
@@ -243,5 +234,9 @@ ipcMain.handle(
     }
   }
 )
+
+ipcMain.handle('get-app-version', async (_event) => {
+  return app.getVersion()
+})
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

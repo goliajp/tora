@@ -9,8 +9,10 @@ files:
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
-asarUnpack:
-  - resources/**
+  - '!external/*'
+#asarUnpack:
+#  - resources/**
+asar: false
 win:
   executableName: electron-tora
 nsis:
@@ -19,6 +21,9 @@ nsis:
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
 mac:
+  target:
+    - dmg
+    - zip
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
@@ -30,10 +35,13 @@ dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
   target:
+    - AppImage
+    - snap
     - deb
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  # python test url
+  url: https://http://127.0.0.1:8000/auto-updates

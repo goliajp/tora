@@ -5,7 +5,13 @@
     <title>Electron</title>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
-      content="default-src 'self';connect-src * ; media-src *; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data: blob:"
+      content="default-src 'self';
+      connect-src *;
+      script-src *;
+      media-src *;
+      style-src 'self' 'unsafe-inline';
+      frame-src https://electron-tora-85f7a.firebaseapp.com;
+      img-src * data: blob:"
       http-equiv="Content-Security-Policy"
     />
   </head>

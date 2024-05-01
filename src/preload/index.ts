@@ -25,7 +25,10 @@ const api = {
   readEntireFile: async (filePath: string, encoding: undefined | BufferEncoding) => {
     return await ipcRenderer.invoke('read-entire-file', filePath, encoding)
   },
-  getImageData: (filePath: string) => ipcRenderer.invoke('get-image-data', filePath)
+  getImageData: (filePath: string) => ipcRenderer.invoke('get-image-data', filePath),
+  getAppVersion: () => {
+    return ipcRenderer.invoke('get-app-version')
+  }
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
