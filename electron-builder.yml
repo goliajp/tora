@@ -36,6 +36,7 @@ dmg:
 linux:
   target:
     - AppImage
+    - snap
     - deb
 appImage:
   artifactName: ${name}-${version}.${ext}
