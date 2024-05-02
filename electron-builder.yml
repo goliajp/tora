@@ -35,9 +35,9 @@ dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
   target:
-    - AppImage
+#    - AppImage
     - snap
-    - deb
+#    - deb
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
