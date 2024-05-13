@@ -41,6 +41,9 @@ linux:
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
+snap:
+  confinement: strict
+  grade: stable
 publish:
   provider: generic
   # python test url
