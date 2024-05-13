@@ -1,28 +1,19 @@
 import { observer } from 'mobx-react-lite'
-import { getAuth, getRedirectResult, GoogleAuthProvider, signInWithPopup } from '@firebase/auth'
-import '../../plugins/firebase'
 
 const Login = observer(() => {
-  const singInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider()
-    const auth = getAuth()
-    signInWithPopup(auth, provider)
-      .then((rsp) => {
-        console.log(rsp, 'rsp')
-        // location.href = 'electron-fiddle://' + rsp._tokenResponse.oauthIdToken
-      })
-      .catch((err) => {
-        console.error(err)
-        // location.href = '/'
-      })
-    const userCred = await getRedirectResult(auth)
-
-    console.log(userCred)
+  const signInWithGoogle = async () => {
+    // shell.openExternal('https://www.google.com')
+    await window.electron.ipcRenderer.invoke(
+      'open-external',
+      'http://localhost:5174?redirect_uri=electron-tora://login'
+    )
   }
 
   return (
     <div className="mx-auto w-3/5">
-      <button onClick={singInWithGoogle}>Google login</button>
+      <button onClick={signInWithGoogle} className="mt-20">
+        Google login
+      </button>
     </div>
   )
 })

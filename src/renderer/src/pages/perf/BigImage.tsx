@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent } from 'react'
 // eslint-disable-next-line @typescript-eslint/ban-types
 
 const BigImage = observer(() => {
@@ -9,13 +9,17 @@ const BigImage = observer(() => {
 
   const importImage = async () => {
     try {
-      const fileList = await window.api.showOpenDialog(
+      const fileList = await window.electron.ipcRenderer.invoke(
+        'show-open-dialog',
         false,
         [{ name: 'Image', extensions: ['jpg', 'png', 'gif', 'jpeg', 'webp'] }],
         'Select Big Image'
       )
       if (fileList && fileList.length > 0) {
-        const imageBuffer = await window.api.readEntireFile(fileList[0])
+        const imageBuffer = (await window.electron.ipcRenderer.invoke(
+          'read-entire-file',
+          fileList[0]
+        )) as Buffer
         const imageBlob = new Blob([imageBuffer], { type: 'image/*' })
         const imageUrl = URL.createObjectURL(imageBlob)
 

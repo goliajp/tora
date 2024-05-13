@@ -9,14 +9,19 @@ const TextEdit = observer(() => {
 
   const importTxt = async () => {
     try {
-      const fileList = await window.api.showOpenDialog(
+      const fileList = await window.electron.ipcRenderer.invoke(
+        'show-open-dialog',
         false,
         [{ name: 'Text', extensions: ['txt'] }],
         'Select Text File'
       )
 
       if (fileList) {
-        const fileContent = await window.api.readEntireFile(fileList[0], 'utf-8')
+        const fileContent = await window.electron.ipcRenderer.invoke(
+          'read-entire-file',
+          fileList[0],
+          'utf-8'
+        )
         setText(fileContent.toString())
       }
     } catch (e) {
@@ -25,7 +30,8 @@ const TextEdit = observer(() => {
   }
 
   const save = async () => {
-    const filePath = await window.api.saveFile(
+    const filePath = await window.electron.ipcRenderer.invoke(
+      'save-file',
       text,
       [{ name: 'text', extensions: ['txt'] }],
       'Save Text File'

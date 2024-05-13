@@ -1,4 +1,14 @@
-import { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, shell, Tray } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  globalShortcut,
+  ipcMain,
+  Menu,
+  nativeTheme,
+  shell,
+  Tray
+} from 'electron'
 import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import trayIcon from '../../resources/tray.png?asset'
@@ -8,22 +18,25 @@ import log from 'electron-log'
 import fs from 'fs'
 import { setupAutoUpdater } from './auto-updater.ts'
 import * as path from 'node:path'
+import * as os from 'node:os'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 
 //python test url
 const server = 'http://127.0.0.1:8000'
+// const NOTIFICATION_TITLE = 'Basic Notification'
+// const NOTIFICATION_BODY = 'Notification from the Main process'
 
 if (process.defaultApp) {
   console.log(process.argv)
   if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient('electron-fiddle', process.execPath, [
+    app.setAsDefaultProtocolClient('electron-tora', process.execPath, [
       path.resolve(process.argv[1])
     ])
   }
 } else {
-  app.setAsDefaultProtocolClient('electron-fiddle')
+  app.setAsDefaultProtocolClient('electron-tora')
 }
 
 function createWindow(): void {
@@ -32,6 +45,7 @@ function createWindow(): void {
     width: 900,
     height: 670,
     show: false,
+    resizable: true,
     autoHideMenuBar: true,
     // ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -99,6 +113,11 @@ app.whenReady().then(() => {
     }
   })
 
+  // new Notification({
+  //   title: NOTIFICATION_TITLE,
+  //   body: NOTIFICATION_BODY
+  // }).show()
+
   // Register a shortcut listener.
 
   const ret = globalShortcut.register('CommandOrControl+T', () => {
@@ -158,6 +177,21 @@ app.on('window-all-closed', () => {
 ipcMain.handle('get-performance-info', async () => {
   return await pidusage(process.pid)
 })
+
+//system theme start -- macOS only
+ipcMain.handle('dark-mode:toggle', () => {
+  if (nativeTheme.shouldUseDarkColors) {
+    nativeTheme.themeSource = 'light'
+  } else {
+    nativeTheme.themeSource = 'dark'
+  }
+  return nativeTheme.shouldUseDarkColors
+})
+
+ipcMain.handle('dark-mode:system', () => {
+  nativeTheme.themeSource = 'system'
+})
+//system theme end
 
 ipcMain.handle(
   'show-open-dialog',
@@ -238,5 +272,21 @@ ipcMain.handle(
 ipcMain.handle('get-app-version', async (_event) => {
   return app.getVersion()
 })
+
+ipcMain.handle('get-app-info', async (_event) => {
+  // console.log(app)
+  // console.log(os)
+  return {
+    appName: app.getName(),
+    version: app.getVersion(),
+    platform: os.platform(),
+    arch: os.arch()
+  }
+})
+
+ipcMain.handle('open-external', async (_event, url: string) => {
+  return await shell.openExternal(url)
+})
+
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

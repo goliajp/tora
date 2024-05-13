@@ -13,13 +13,13 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugins:import/recommended',
-    'plugins:jsx-a11y/recommended',
-    'plugins:react/recommended',
-    'plugins:@typescript-eslint/recommended',
-    'plugins:react-hooks/recommended',
-    'plugins:tailwindcss/recommended',
-    'plugins:prettier/recommended',
+    'plugin:import/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:tailwindcss/recommended',
+    'plugin:prettier/recommended',
     '@electron-toolkit/eslint-config-ts/recommended',
     '@electron-toolkit/eslint-config-prettier',
     'prettier' // Ensure this is the last configuration in the extent array.
@@ -98,6 +98,9 @@ module.exports = {
     'tailwindcss/enforces-negative-arbitrary-values': 0, // No enforcement of tailwindcss negative arbitrary values
 
     // TypeScript
-    '@typescript-eslint/no-explicit-any': 0 // Allow usage of any type
+    '@typescript-eslint/no-explicit-any': 0, // Allow usage of any type
+
+    //额外添加的规则
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]  //允许定义以 _ 开头的未使用参数
   }
 }

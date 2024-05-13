@@ -7,7 +7,7 @@
     <meta
       content="default-src 'self';
       connect-src *;
-      script-src *;
+      script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://*;
       media-src *;
       style-src 'self' 'unsafe-inline';
       frame-src https://electron-tora-85f7a.firebaseapp.com;

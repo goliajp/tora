@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import { observer } from 'mobx-react-lite'
 import { makeAutoObservable, observable, runInAction } from 'mobx'
 
@@ -42,7 +42,7 @@ const imgUrls = [
 const data: Obj[][] = observable([] as Obj[][])
 
 const columns = 5
-const picWidth = 200
+const picWidth = 300
 const spaceX = 16
 const spaceY = 16
 
@@ -66,50 +66,54 @@ class Obj {
     makeAutoObservable(this)
   }
 
-  fetchHeight() {
-    const img = new Image()
-    img.src = this.url
-    img.onload = () => {
-      console.log(img.height, 'height')
-      runInAction(() => {
-        this.height = picWidth * (img.height / img.width)
-        if (this.row > 0) {
-          const upItem = data[this.row - 1][this.col]
-          this.offsetY = upItem.offsetY + upItem.height + spaceY
-        }
-      })
-    }
+  fetchHeight(i: number) {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.src = this.url
+      img.onload = () => {
+        runInAction(() => {
+          this.height = picWidth * (img.height / img.width)
+          resolve(true)
+
+          if (this.row > 0) {
+            const topHeight = data[this.row - 1][i % 5].height
+            this.offsetY = topHeight + spaceY + data[this.row - 1][i % 5].offsetY
+          }
+        })
+      }
+    })
   }
 }
 
 const MasonryLayout = observer(() => {
-  const init = () => {
+  const init = async () => {
+    // 标记为异步函数
     for (let i = 0; i < imgUrls.length; i++) {
       const row = Math.floor(i / columns)
       const col = i % columns
 
-      // init data item
+      // 确保对应行数组已经初始化
       if (!data[row]) {
-        data[row] = [] as Obj[]
-      }
-      if (!data[row][col]) {
-        data[row][col] = {} as Obj
+        data[row] = []
       }
 
-      // set data item
-      runInAction(() => {
+      // 如果没有相应的对象，则创建
+      if (!data[row][col]) {
         data[row][col] = new Obj({ url: imgUrls[i], row, col })
-      })
-      data[row][col].fetchHeight()
+      }
+
+      // 等待当前这张图片完全处理完成，包括加载和设置位置
+      await data[row][col].fetchHeight(i) // 注意，使用await确保按序执行
     }
+    // 所有图片处理完成后的操作可以在这里继续
   }
 
   useEffect(() => {
-    init()
+    init().then()
   }, [])
 
   return (
-    <div className="mx-auto w-3/5">
+    <div className="mx-auto w-3/5 mt-20">
       {data.map((row, index) => {
         return (
           <Fragment key={index}>
@@ -130,32 +134,6 @@ const MasonryLayout = observer(() => {
           </Fragment>
         )
       })}
-      {/*{imgUrl.map((url, index) => {*/}
-      {/*  const img = new Image()*/}
-      {/*  // let width*/}
-      {/*  // let height*/}
-      {/*  const padding = 16*/}
-      {/*  img.onload = function () {*/}
-      {/*    console.log(img.width, img.height)*/}
-      {/*  }*/}
-      {/*  img.src = url*/}
-      {/*  const rowX = Math.ceil(index / 3)*/}
-      {/*  const rowY = index % 3*/}
-      {/*  const imgItem = {*/}
-      {/*    width: 340,*/}
-      {/*    height: 340 * (img.height / img.width),*/}
-      {/*    rowX,*/}
-      {/*    rowY,*/}
-      {/*    positionY: rowY * (340 + padding),*/}
-      {/*    positionX: rowX * (340 + padding)*/}
-      {/*  }*/}
-      {/*  console.log(imgItem)*/}
-      {/*  return (*/}
-      {/*    <div key={index} className="mb-4">*/}
-      {/*      <img className="h-auto max-w-full rounded-lg" src={url} alt="" />*/}
-      {/*    </div>*/}
-      {/*  )*/}
-      {/*})}*/}
     </div>
   )
 })

@@ -13,14 +13,14 @@ const LongList = observer(() => {
   const [listType, setListType] = useState<ListType>(ListType.NORMAL)
 
   const usernamesArray = useMemo(() => {
-    return Array(50000)
+    return Array(100)
       .fill(null)
       .map(() => faker.internet.userName())
   }, [])
 
   return (
-    <div className="w-3/5 mx-auto">
-      <div className=" w-2/5 bg-white  py-4 flex flex-col items-center fixed mx-auto inset-x-0 z-[2]">
+    <div className="w-3/5 mx-auto overflow-hidden h-full">
+      <div className="py-4 flex flex-col items-center mx-auto inset-x-0 z-[2]">
         <h1 className="text-2xl font-bold">Long List</h1>
         <div className="my-4">list length : {usernamesArray.length}</div>
         <div className="flex justify-center my-2">
@@ -41,7 +41,9 @@ const LongList = observer(() => {
           </div>
         </div>
       </div>
-      <div className="w-full text-center flex flex-col items-center justify-around pt-36">
+
+      {/* list start */}
+      <div className="w-full text-center flex flex-col items-center justify-around pt-10 overflow-y-auto h-[76%]">
         {listType === ListType.NORMAL &&
           usernamesArray.map((username, index) => {
             return (
@@ -52,11 +54,12 @@ const LongList = observer(() => {
           })}
         {listType === ListType.VIRTUAL && (
           <Virtuoso
-            useWindowScroll
-            className="w-4/5 justify-center items-center"
+            className="w-4/5 justify-center items-center mb-20"
             data={usernamesArray}
-            itemContent={(_, user) => (
-              <div className="w-60 shadow rounded h-10 leading-10 mb-6 mx-auto">{user}</div>
+            itemContent={(index, user) => (
+              <div className="w-60 shadow rounded h-10 leading-10 mb-6 mx-auto" key={index}>
+                {user}
+              </div>
             )}
           />
         )}
