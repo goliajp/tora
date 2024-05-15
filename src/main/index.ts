@@ -1,6 +1,7 @@
 import {
   app,
   BrowserWindow,
+  crashReporter,
   dialog,
   globalShortcut,
   ipcMain,
@@ -27,6 +28,12 @@ let tray: Tray | null = null
 const server = 'http://127.0.0.1:8000'
 // const NOTIFICATION_TITLE = 'Basic Notification'
 // const NOTIFICATION_BODY = 'Notification from the Main process'
+
+crashReporter.start({
+  productName: 'electron-tora',
+  submitURL: 'http://',
+  uploadToServer: true
+})
 
 if (process.defaultApp) {
   console.log(process.argv)

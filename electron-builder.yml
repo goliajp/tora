@@ -1,4 +1,4 @@
-appId: jp.golia.app.tora
+appId: jp.golia.electron-tora
 productName: electron-tora
 directories:
   buildResources: build
@@ -12,7 +12,7 @@ files:
   - '!external/*'
 #asarUnpack:
 #  - resources/**
-asar: false
+asar: true
 win:
   executableName: electron-tora
 nsis:
@@ -21,18 +21,25 @@ nsis:
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
 mac:
+  category: public.app-category.developer-tools
+  identity: "wen shuai (ABXHL289T9)"
+  minimumSystemVersion: 12.0
+#  identity: null
   target:
-    - dmg
-    - zip
-  entitlementsInherit: build/entitlements.mac.plist
-  extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
-    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
-    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
-  notarize: false
+    target: mas
+    arch: universal
+  provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
+  notarize: true
 dmg:
   artifactName: ${name}-${version}.${ext}
+mas:
+  hardenedRuntime: false
+  type: distribution
+  identity: "GOLIA K.K. (KF79DRC524)"
+  entitlements: build/mas/entitlements.mas.plist
+  entitlementsInherit: build/mas/entitlements.mas.inherit.plist
+  entitlementsLoginHelper: build/mas/entitlements.mas.loginhelper.plist
+  provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
 linux:
   target:
 #    - AppImage
@@ -48,3 +55,4 @@ publish:
   provider: generic
   # python test url
   url: https://http://127.0.0.1:8000/auto-updates
+copyright: Copyright © 2024 GOLIA 株式会社
