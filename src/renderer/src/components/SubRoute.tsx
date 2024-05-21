@@ -27,7 +27,7 @@ const SubRoute = observer(() => {
       }}
     >
       <div className="w-full px-2">
-        {appStore.routeInfo.children?.map((item) => {
+        {appStore.routeInfo?.children?.map((item) => {
           return (
             <Link
               key={item.path}

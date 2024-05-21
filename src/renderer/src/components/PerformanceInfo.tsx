@@ -2,6 +2,7 @@ import FPSStats from '@/renderer/src/components/FpsStats'
 import { useEffect, useState } from 'react'
 import { useInterval } from 'react-use'
 import { Stat } from '@/renderer/src/types'
+import { localStore } from '@/renderer/src/store/local.ts'
 
 type AppInfoType = {
   appName: string
@@ -29,7 +30,7 @@ export const PerformanceInfo = () => {
   }
 
   return (
-    <div className="w-[260px] bg-[#77e7a0ff] h-full flex flex-col items-center py-6 right-0 top-0">
+    <div className="w-[190px] bg-[#77e7a0ff] h-full flex flex-col items-center py-6 right-0 top-0 flex-none">
       <FPSStats />
       <div className="my-2 text-center">
         <div className="text-sm">CPU : {performanceInfo.cpu && performanceInfo.cpu.toFixed()}%</div>
@@ -47,9 +48,7 @@ export const PerformanceInfo = () => {
           ))}
           <div>
             <span>timezone：</span>
-            <span className="text-blue-600">
-              {Intl.DateTimeFormat().resolvedOptions().timeZone}
-            </span>
+            <span className="text-blue-600">{localStore.timeZone}</span>
           </div>
         </div>
       </div>

@@ -69,3 +69,5 @@ async def download_file(platform: str, version: str):
         return FileResponse(path=file_path, filename=filename)
     else:
         raise HTTPException(status_code=404, detail="File not found.")
+
+#   uvicorn main:app --reload

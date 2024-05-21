@@ -10,8 +10,8 @@ const Login = observer(() => {
   }
 
   return (
-    <div className="mx-auto w-3/5">
-      <button onClick={signInWithGoogle} className="mt-20">
+    <div>
+      <button onClick={signInWithGoogle} className="mt-4">
         Google login
       </button>
     </div>

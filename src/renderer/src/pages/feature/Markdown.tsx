@@ -4,7 +4,6 @@ import remarkGfm from 'remark-gfm'
 import { useState } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import '../../assets/markdown-body.css'
 
 const Markdown = observer(() => {
   const [content, setContent] = useState(`Here is some JavaScript code:

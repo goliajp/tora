@@ -30,10 +30,9 @@ const ImageFilter = observer(() => {
   }
 
   return (
-    <div className="mx-auto w-3/5">
+    <div>
       <div className="mt-4">
-        <div className="my-4">使用 wasm 需要在 meta 加上 wasm-unsafe-eval</div>
-        <canvas ref={canvas} height={500} width={500}></canvas>
+        <canvas ref={canvas} height={400} width={400}></canvas>
         <button onClick={applyFilter} className="mt-4">
           应用滤镜
         </button>

@@ -15,6 +15,9 @@ import Markdown from '@/renderer/src/pages/feature/Markdown.tsx'
 import ImageFilter from '@/renderer/src/pages/feature/ImageFilter.tsx'
 import DataDashboard from '@/renderer/src/pages/perf/DataDashboard.tsx'
 import Notifications from '@/renderer/src/pages/feature/Notifications.tsx'
+import TimeZone from '@/renderer/src/pages/feature/TimeZone.tsx'
+import Currency from '@/renderer/src/pages/feature/Currency.tsx'
+import Ffmpeg from '@/renderer/src/pages/feature/Ffmpeg.tsx'
 
 type IconComponentType = FunctionComponent<IconBaseProps>
 
@@ -25,6 +28,7 @@ export type RouteInfo = {
   icon?: IconComponentType
   name?: string
   redirect?: string
+  markdown?: string
 }
 
 const route: RouteInfo[] = [
@@ -49,7 +53,10 @@ const route: RouteInfo[] = [
       {
         name: '新手引导',
         path: '/feature/tour',
-        component: Tour
+        component: Tour,
+        markdown: `
+当第一次更新到最新版本的时候，会触发引导提示
+`
       },
       {
         name: '登录',
@@ -64,12 +71,30 @@ const route: RouteInfo[] = [
       {
         name: '图像滤镜',
         path: '/feature/image-filter',
-        component: ImageFilter
+        component: ImageFilter,
+        markdown: `
+使用 wasm 需要在 meta 加上 wasm-unsafe-eval
+`
       },
       {
         name: '消息通知',
         path: '/feature/notification',
         component: Notifications
+      },
+      {
+        name: '时区切换',
+        path: '/feature/timezone',
+        component: TimeZone
+      },
+      {
+        name: '货币切换',
+        path: '/feature/currency',
+        component: Currency
+      },
+      {
+        name: 'ffmpeg',
+        path: '/feature/ffmpeg',
+        component: Ffmpeg
       }
     ]
   },
@@ -92,7 +117,13 @@ const route: RouteInfo[] = [
       {
         name: '大图片加载',
         path: '/perf/big-image',
-        component: BigImage
+        component: BigImage,
+        markdown: `
+        
+超过 250MB 可能会导致图片加载失败/n
+使用 blob 格式需要在 index.html 文件里的 meta 加上 img-src * data: blob:
+
+        `
       },
       {
         name: '瀑布流布局',

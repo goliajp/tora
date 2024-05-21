@@ -17,7 +17,7 @@ const BigImage = observer(() => {
       )
       if (fileList && fileList.length > 0) {
         const imageBuffer = (await window.electron.ipcRenderer.invoke(
-          'read-entire-file',
+          '' + 'read-entire-file',
           fileList[0]
         )) as Buffer
         const imageBlob = new Blob([imageBuffer], { type: 'image/*' })
@@ -48,10 +48,7 @@ const BigImage = observer(() => {
   return (
     <div className="mx-auto w-3/5">
       <div className="bg-white py-4 flex flex-col items-center mx-auto inset-x-0 z-[2]">
-        <h1 className="text-2xl font-bold">Big Image</h1>
         <div className="text-center">
-          <div className="py-4">超过 250MB 可能会导致图片加载失败</div>
-          <div>使用 blob 格式需要在 index.html 文件里的 meta 加上 img-src * data: blob:</div>
           <div className="flex justify-center mt-4">
             <button className="mr-4" onClick={() => setWidth((w) => w - 10)}>
               -
@@ -60,7 +57,7 @@ const BigImage = observer(() => {
           </div>
         </div>
       </div>
-      <div className="w-full flex mt-10">
+      <div className="w-full mt-10">
         <div className="flex-1">
           <div>System Api</div>
           <button className="my-4" onClick={importImage}>

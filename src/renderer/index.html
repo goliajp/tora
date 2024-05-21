@@ -19,5 +19,20 @@
   <body>
     <div id="root"></div>
     <script src="./src/main.tsx" type="module"></script>
+  <script>
+    window.onmessage = (event) => {
+      console.log(event,'event')
+      // event.source === window 意味着消息来自预加载脚本
+      // 而不是来自iframe或其他来源
+      if (event.source === window && event.data === 'main-world-port') {
+        const [ port ] = event.ports
+        // 一旦我们有了这个端口，我们就可以直接与主进程通信
+        window.electronMessagePort = port
+        window.electronMessagePort.onmessage = (event) => {
+          console.log('from main process:', event.data)
+        }
+      }
+    }
+  </script>
   </body>
 </html>

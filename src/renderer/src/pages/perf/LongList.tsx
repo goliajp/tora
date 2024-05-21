@@ -13,15 +13,14 @@ const LongList = observer(() => {
   const [listType, setListType] = useState<ListType>(ListType.NORMAL)
 
   const usernamesArray = useMemo(() => {
-    return Array(100)
+    return Array(10000)
       .fill(null)
       .map(() => faker.internet.userName())
   }, [])
 
   return (
-    <div className="w-3/5 mx-auto overflow-hidden h-full">
+    <div className="mx-auto overflow-hidden h-full">
       <div className="py-4 flex flex-col items-center mx-auto inset-x-0 z-[2]">
-        <h1 className="text-2xl font-bold">Long List</h1>
         <div className="my-4">list length : {usernamesArray.length}</div>
         <div className="flex justify-center my-2">
           <div

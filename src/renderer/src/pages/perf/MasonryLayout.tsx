@@ -44,7 +44,7 @@ const imgUrls = [
 const data: Obj[][] = observable([] as Obj[][])
 
 const columns = 5
-const picWidth = 300
+const picWidth = 100
 const spaceX = 16
 const spaceY = 16
 
@@ -115,7 +115,7 @@ const MasonryLayout = observer(() => {
   }, [])
 
   return (
-    <div className="mx-auto w-3/5 mt-20">
+    <div>
       {data.map((row, index) => {
         return (
           <Fragment key={index}>

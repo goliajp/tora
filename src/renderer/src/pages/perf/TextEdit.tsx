@@ -40,9 +40,8 @@ const TextEdit = observer(() => {
   }
 
   return (
-    <div className="mx-auto w-3/5">
+    <div>
       <div className="w-72 bg-white py-4 flex flex-col items-center mx-auto inset-x-0 z-[2]">
-        <h1 className="text-2xl font-bold">Text Edit</h1>
         <button className="my-4" onClick={importTxt}>
           import txt
         </button>

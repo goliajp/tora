@@ -70,7 +70,7 @@ const DataDashboard = observer(() => {
     let lastData: WebSocketInfo | null = null
 
     socket.onmessage = (event: MessageEvent) => {
-      console.log(JSON.parse(event.data), 'JSON.parse(event.data)')
+      // console.log(JSON.parse(event.data), 'JSON.parse(event.data)')
       lastData = JSON.parse(event.data)
     }
 
@@ -92,8 +92,7 @@ const DataDashboard = observer(() => {
 
   return (
     <div className="mx-auto flex justify-center items-center flex-col">
-      <div className="mt-32">
-        <h1 className="text-2xl font-bold">Data Dashboard</h1>
+      <div className="mt-12">
         <div className="flex mt-6">
           <div>
             <span>timeout: (max:1s/120 )</span>
@@ -108,23 +107,23 @@ const DataDashboard = observer(() => {
         </div>
       </div>
       <div className="mt-32">
-        <div className="flex">
+        <div className="flex flex-wrap">
           {alphabetArray.map((char) => (
             <div key={char} className="flex items-center">
-              <span className="pl-2">{char}</span>
+              <span className="pl-2 flex-none">{char}</span>
               <span>: {info[char]}</span>
             </div>
           ))}
         </div>
         <div className="flex flex-wrap justify-center">
-          <LineChart width={1200} height={300} data={info.list}>
+          <LineChart width={600} height={300} data={info.list}>
             <Line type="monotone" dataKey="value" stroke={info.color} legendType="square" />
             <CartesianGrid stroke={info.color} />
             <XAxis dataKey="value" />
             <YAxis />
             <Tooltip />
           </LineChart>
-          <LineChart width={1200} height={300} data={info.list}>
+          <LineChart width={600} height={300} data={info.list}>
             <Line type="monotone" dataKey="value" stroke={info.color} legendType="square" />
             <CartesianGrid stroke={info.color} />
             <XAxis dataKey="value" />
@@ -133,7 +132,7 @@ const DataDashboard = observer(() => {
           </LineChart>
         </div>
         <div className="flex flex-wrap justify-center mt-20">
-          <div className="w-[1200px] flex justify-between">
+          <div className="w-[600px] flex justify-between">
             <BarChart
               width={580}
               height={300}
@@ -156,7 +155,7 @@ const DataDashboard = observer(() => {
               <Bar dataKey="value" fill={info.color} shape={<TriangleBar />} />
             </BarChart>
           </div>
-          <BarChart width={1200} height={300} data={info.list}>
+          <BarChart width={600} height={300} data={info.list}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
@@ -166,7 +165,7 @@ const DataDashboard = observer(() => {
           </BarChart>
         </div>
         <div className="flex flex-wrap justify-center mt-20">
-          <AreaChart width={2400} height={300} data={info.list}>
+          <AreaChart width={600} height={300} data={info.list}>
             <Area type="monotone" dataKey="value" stroke="#8884d8" fill={info.color} />
           </AreaChart>
         </div>

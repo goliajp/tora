@@ -26,8 +26,10 @@ mac:
   minimumSystemVersion: 12.0
 #  identity: null
   target:
-    target: mas
-    arch: universal
+    - target: mas
+      arch: universal
+    - target: mas-dev
+      arch: universal
   provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
   notarize: true
 dmg:
@@ -40,6 +42,15 @@ mas:
   entitlementsInherit: build/mas/entitlements.mas.inherit.plist
   entitlementsLoginHelper: build/mas/entitlements.mas.loginhelper.plist
   provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
+masDev:
+  hardenedRuntime: false
+  type: development
+  identity: "wen shuai (ABXHL289T9)"
+  entitlements: build/mas/entitlements.mas.plist
+  entitlementsInherit: build/mas/entitlements.mas.inherit.plist
+  entitlementsLoginHelper: build/mas/entitlements.mas.loginhelper.plist
+  provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
+
 linux:
   target:
 #    - AppImage

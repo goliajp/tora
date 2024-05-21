@@ -23,18 +23,16 @@ const Tour = observer(() => {
   }, [setIsOpen])
 
   return (
-    <div className="mx-auto w-3/5">
+    <div className="mx-auto">
       <div className="flex mt-4 flex-wrap">
         <div>最新版本:{latestVersion}</div>
         <div className="ml-4">当前版本:{version}</div>
       </div>
-      <div>当第一次更新到最新版本到时候，会触发引导提示</div>
-
-      <div className="flex mt-40">
+      <div className="mt-40">
         {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
         <div className="first-step">first-step</div>
         {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
-        <div className="second-step ml-14">second-step</div>
+        <div className="second-step mt-10">second-step</div>
       </div>
     </div>
   )
