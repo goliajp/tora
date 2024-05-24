@@ -17,7 +17,6 @@ const Layout = observer(() => {
     const parts = path.split('/')
     const result = `/${parts[1]}`
 
-    console.log(result)
     appStore.setRouteInfo(route.find((item) => result === item.path) || route[0])
   }, [location])
 

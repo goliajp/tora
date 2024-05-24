@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import { formatSize } from '@/renderer/src/utils'
+import useMessagePort from '@/renderer/src/hooks/UseMessagePort.tsx'
 
 const Ffmpeg = observer(() => {
   const [video, setVideo] = useState({
@@ -16,6 +17,10 @@ const Ffmpeg = observer(() => {
     channels: 0
   })
 
+  const [input, setInput] = useState('')
+  const { isHasMessagePort } = useMessagePort({
+    callBack: setInput
+  })
   const fileSelect = async () => {
     const filePath = await window.electron.ipcRenderer.invoke(
       'show-open-dialog',
@@ -28,26 +33,34 @@ const Ffmpeg = observer(() => {
   }
 
   const convert = async () => {
-    const res = await window.electron.ipcRenderer.invoke('ffmpeg-convert', video.filename)
-    console.log(res, 'res')
-  }
+    await window.electron.ipcRenderer.invoke('ffmpeg-convert', video.filename)
 
-  const postMessage = () => {
-    window.electronMessagePort.postMessage('123')
-  }
+    //加载messagePort
 
-  // useEffect(() => {
-  //   window.electronMessagePort.onmessage = (event) => {
-  //     console.log('hahaha', event)
-  //   }
-  // }, [])
+    if (window.electronMessagePort) {
+      window.electronMessagePort.onmessage = (event) => {
+        setInput(event)
+      }
+    }
+  }
 
   return (
     <div>
       <div>
-        <button className="mb-6" onClick={postMessage}>
-          通信
-        </button>{' '}
+        {isHasMessagePort && (
+          <div className="my-4">
+            <div>与子窗口同步：</div>
+            <input
+              className="border"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value)
+                window.electronMessagePort.postMessage(e.target.value)
+              }}
+            />
+          </div>
+        )}
+
         <div
           className="size-60 border flex items-center justify-center cursor-pointer hover:border-blue-500 transition-all hover:text-blue-500"
           onClick={fileSelect}

@@ -26,9 +26,11 @@ mac:
   minimumSystemVersion: 12.0
 #  identity: null
   target:
-    - target: mas
-      arch: universal
-    - target: mas-dev
+#    - target: mas
+#      arch: universal
+#    - target: mas-dev
+#      arch: universal
+    - target: dmg
       arch: universal
   provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
   notarize: true

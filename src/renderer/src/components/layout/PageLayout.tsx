@@ -63,7 +63,7 @@ const PageLayout = observer(() => {
               })}
             </Routes>
           </div>
-          <footer>footer</footer>
+          {/*<footer>footer</footer>*/}
         </div>
 
         {/* markdown */}

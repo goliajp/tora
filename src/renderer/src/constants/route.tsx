@@ -18,6 +18,8 @@ import Notifications from '@/renderer/src/pages/feature/Notifications.tsx'
 import TimeZone from '@/renderer/src/pages/feature/TimeZone.tsx'
 import Currency from '@/renderer/src/pages/feature/Currency.tsx'
 import Ffmpeg from '@/renderer/src/pages/feature/Ffmpeg.tsx'
+import ScreensShot from '@/renderer/src/pages/feature/ScreensShot.tsx'
+import Grpc from '@/renderer/src/pages/feature/Grpc.tsx'
 
 type IconComponentType = FunctionComponent<IconBaseProps>
 
@@ -95,6 +97,16 @@ const route: RouteInfo[] = [
         name: 'ffmpeg',
         path: '/feature/ffmpeg',
         component: Ffmpeg
+      },
+      {
+        name: '屏幕截图',
+        path: '/feature/screenshot',
+        component: ScreensShot
+      },
+      {
+        name: 'grpc',
+        path: '/feature/grpc',
+        component: Grpc
       }
     ]
   },

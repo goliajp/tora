@@ -6,6 +6,7 @@ import {
   globalShortcut,
   ipcMain,
   Menu,
+  MenuItem,
   MessageChannelMain,
   nativeTheme,
   pushNotifications,
@@ -23,6 +24,8 @@ import { setupAutoUpdater } from './auto-updater.ts'
 import * as path from 'node:path'
 import * as os from 'node:os'
 import ffmpegStatic from 'ffmpeg-static'
+import Screenshots from 'electron-screenshots'
+import { registerGrpcHandler } from './grpc-handler.ts'
 
 const ffprobePath = require('@ffprobe-installer/ffprobe').path
 
@@ -32,8 +35,9 @@ let mainWindow: BrowserWindow | null = null
 let childWindow: BrowserWindow | null = null
 let ffmpegInstance: any = null
 let tray: Tray | null = null
+// let grpcCall: any = null
 // const mainPort1: MessagePort | null = null
-// const mainPport2: MessagePort | null = null
+// const mainPport2: MessagePort | null = nullgrpcCall
 
 ffmpeg.setFfmpegPath(ffmpegStatic)
 ffmpeg.setFfprobePath(ffprobePath)
@@ -94,6 +98,25 @@ function createWindow(): void {
     setupAutoUpdater(server)
   }
 
+  // Register grpc handler
+  if (mainWindow) {
+    registerGrpcHandler(mainWindow)
+  }
+
+  mainWindow.webContents.on('context-menu', (_event, params) => {
+    const menu = new Menu()
+    menu.append(
+      new MenuItem({
+        role: 'shareMenu',
+        sharingItem: {
+          filePaths: [trayIcon]
+        }
+        // click: () => {}
+      })
+    )
+    mainWindow && menu.popup({ window: mainWindow, x: params.x, y: params.y })
+  })
+
   mainWindow.once('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined')
@@ -148,6 +171,11 @@ app.whenReady().then(() => {
     }
   })
 
+  //设置截图
+  const screenshot = new Screenshots()
+  globalShortcut.register('CommandOrControl+Shift+S', () => {
+    screenshot.startCapture()
+  })
   //设置消息端口
 
   // new Notification({
@@ -371,35 +399,35 @@ ipcMain.handle('ffmpeg-read-file', async (_event, filePath: string) => {
 
 //convert
 ipcMain.handle('ffmpeg-convert', async (_event, filePath: string) => {
-  childWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
-    // show: true,
-    resizable: true,
-    // frame: false,
-    autoHideMenuBar: true,
-    // ...(process.platform === 'linux' ? { icon } : {}),
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+  return new Promise((resolve) => {
+    childWindow = new BrowserWindow({
+      width: 400,
+      height: 300,
+      // show: true,
+      resizable: true,
+      // frame: false,
+      autoHideMenuBar: true,
+      // ...(process.platform === 'linux' ? { icon } : {}),
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false
+      }
+    })
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      childWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/convert.html`).then()
+    } else {
+      childWindow.loadFile(join(__dirname, '../renderer/convert.html')).then()
     }
-  })
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    childWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/convert.html`).then()
-  } else {
-    childWindow.loadFile(join(__dirname, '../renderer/convert.html')).then()
-  }
 
-  childWindow.once('ready-to-show', () => {
-    childWindow?.show()
-    initMessageChannelMain()
-  })
+    childWindow.once('ready-to-show', () => {
+      childWindow?.show()
+      initMessageChannelMain()
+    })
 
-  childWindow?.on('closed', () => {
-    ffmpegInstance?.kill()
-  })
+    childWindow?.on('closed', () => {
+      ffmpegInstance?.kill()
+    })
 
-  return new Promise((resolve, reject) => {
     const output = filePath.replace('.mp4', '-convert.avi')
     ffmpegInstance = ffmpeg(filePath)
       .toFormat('avi')
@@ -412,32 +440,37 @@ ipcMain.handle('ffmpeg-convert', async (_event, filePath: string) => {
         }
       })
       .on('end', () => {
-        resolve(output)
+        console.log(output, 'output')
         if (childWindow && !childWindow.isDestroyed()) {
           childWindow.webContents.send('convert-done')
         }
       })
       .on('error', (err: any) => {
-        reject(err)
+        log.error(err, 'ffmpeg-convert error')
         if (childWindow && !childWindow.isDestroyed()) {
           childWindow.webContents.send('convert-error')
         }
       })
+
     ffmpegInstance.run()
+    resolve('success')
   })
 })
 
 const initMessageChannelMain = () => {
-  console.log('initMessageChannelMain')
   const { port1, port2 } = new MessageChannelMain()
+
+  console.log('port1port1')
   mainWindow?.webContents.postMessage('main-world-port', null, [port1])
   childWindow?.webContents.postMessage('convert-world-port', null, [port2])
 }
-// ipcMain.handle('close-child-window', () => {
-//   console.log('close-child-window')
-//   ffmpegInstance?.kill()
-//   return childWindow?.close()
-// })
+
+//屏幕截图
+ipcMain.handle('screenshot', async (_event) => {
+  const screenshot = new Screenshots()
+  screenshot.startCapture()
+  return
+})
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

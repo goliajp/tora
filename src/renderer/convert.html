@@ -29,9 +29,6 @@
       const [ port ] = event.ports
       // 一旦我们有了这个端口，我们就可以直接与主进程通信
       window.electronMessagePort = port
-      window.electronMessagePort.onmessage = (event) => {
-        console.log('from convert process:', event.data)
-      }
       window.electronMessagePort.start()
     }
   }
