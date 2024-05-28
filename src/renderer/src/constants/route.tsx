@@ -96,12 +96,18 @@ const route: RouteInfo[] = [
       {
         name: 'ffmpeg',
         path: '/feature/ffmpeg',
-        component: Ffmpeg
+        component: Ffmpeg,
+        markdown: `
+利用 postMessage 传递数据
+        `
       },
       {
         name: '屏幕截图',
         path: '/feature/screenshot',
-        component: ScreensShot
+        component: ScreensShot,
+        markdown: ` 
+使用了 <a href="https://github.com/nashaofu/screenshots?tab=readme-ov-file#electron-screenshots" target="_blank">electron-screenshots</a>
+        `
       },
       {
         name: 'grpc',

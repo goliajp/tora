@@ -7,9 +7,7 @@ import {
   ipcMain,
   Menu,
   MenuItem,
-  MessageChannelMain,
   nativeTheme,
-  pushNotifications,
   shell,
   Tray
 } from 'electron'
@@ -23,30 +21,19 @@ import fs from 'fs'
 import { setupAutoUpdater } from './auto-updater.ts'
 import * as path from 'node:path'
 import * as os from 'node:os'
-import ffmpegStatic from 'ffmpeg-static'
 import Screenshots from 'electron-screenshots'
 import { registerGrpcHandler } from './grpc-handler.ts'
-
-const ffprobePath = require('@ffprobe-installer/ffprobe').path
-
-const ffmpeg = require('fluent-ffmpeg')
+import { registerFfmpegHandler } from './ffmpeg-handler.ts'
 
 let mainWindow: BrowserWindow | null = null
-let childWindow: BrowserWindow | null = null
-let ffmpegInstance: any = null
-let tray: Tray | null = null
-// let grpcCall: any = null
-// const mainPort1: MessagePort | null = null
-// const mainPport2: MessagePort | null = nullgrpcCall
 
-ffmpeg.setFfmpegPath(ffmpegStatic)
-ffmpeg.setFfprobePath(ffprobePath)
+let tray: Tray | null = null
 
 //push notification
-pushNotifications.registerForAPNSNotifications().then((token) => {
-  // 转发令牌到您的远程通知服务器
-  console.log(token, 'token')
-})
+// pushNotifications.registerForAPNSNotifications().then((token) => {
+//   // 转发令牌到您的远程通知服务器
+//   console.log(token, 'token')
+// })
 // pushNotifications.on('received-apns-notification', (event, userInfo) => {
 //   // 通过相关用户信息字段生成一个新的通知对象
 //   console.log(event, userInfo, 'userInfo')
@@ -101,6 +88,7 @@ function createWindow(): void {
   // Register grpc handler
   if (mainWindow) {
     registerGrpcHandler(mainWindow)
+    registerFfmpegHandler(mainWindow)
   }
 
   mainWindow.webContents.on('context-menu', (_event, params) => {
@@ -352,118 +340,6 @@ ipcMain.handle('get-app-info', async (_event) => {
 ipcMain.handle('open-external', async (_event, url: string) => {
   return await shell.openExternal(url)
 })
-
-//ffmpeg start
-ipcMain.handle('ffmpeg-read-file', async (_event, filePath: string) => {
-  log.info(ffmpeg.ffprobe)
-  return new Promise((resolve, reject) => {
-    ffmpeg.ffprobe(filePath, (err: any, data: { format: any; streams: any }) => {
-      if (err) return reject(err)
-      const { format, streams } = data
-      log.info(format, streams)
-      const { format_name, duration, size, bit_rate } = format
-      let audioBitrate = bit_rate,
-        videoBitrate = bit_rate,
-        codec = '',
-        width = 0,
-        height = 0,
-        channels = 1
-      const video = streams.find((item: { codec_type: string }) => item.codec_type === 'video')
-      if (video) {
-        width = video.width
-        height = video.height
-        codec = video.codec_name
-        videoBitrate = Math.round(video.bit_rate / 1000) + 'k'
-      }
-      const audio = streams.find((item: { codec_type: string }) => item.codec_type === 'audio')
-      if (audio) {
-        audioBitrate = Math.round(audio.bit_rate / 1000) + 'k'
-        channels = audio.channels
-        codec += `/${audio.codec_name}`
-      }
-      resolve({
-        filename: filePath,
-        format_name,
-        width,
-        height,
-        size,
-        duration,
-        videoBitrate,
-        audioBitrate,
-        codec,
-        channels
-      })
-    })
-  })
-})
-
-//convert
-ipcMain.handle('ffmpeg-convert', async (_event, filePath: string) => {
-  return new Promise((resolve) => {
-    childWindow = new BrowserWindow({
-      width: 400,
-      height: 300,
-      // show: true,
-      resizable: true,
-      // frame: false,
-      autoHideMenuBar: true,
-      // ...(process.platform === 'linux' ? { icon } : {}),
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false
-      }
-    })
-    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      childWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/convert.html`).then()
-    } else {
-      childWindow.loadFile(join(__dirname, '../renderer/convert.html')).then()
-    }
-
-    childWindow.once('ready-to-show', () => {
-      childWindow?.show()
-      initMessageChannelMain()
-    })
-
-    childWindow?.on('closed', () => {
-      ffmpegInstance?.kill()
-    })
-
-    const output = filePath.replace('.mp4', '-convert.avi')
-    ffmpegInstance = ffmpeg(filePath)
-      .toFormat('avi')
-      .output(output)
-      .on('progress', (progress: { percent: number }) => {
-        const percent = Math.floor(progress.percent)
-        console.log(`Processing: ${percent} % done`)
-        if (childWindow && !childWindow.isDestroyed()) {
-          childWindow.webContents.send('convert-progress', { percent })
-        }
-      })
-      .on('end', () => {
-        console.log(output, 'output')
-        if (childWindow && !childWindow.isDestroyed()) {
-          childWindow.webContents.send('convert-done')
-        }
-      })
-      .on('error', (err: any) => {
-        log.error(err, 'ffmpeg-convert error')
-        if (childWindow && !childWindow.isDestroyed()) {
-          childWindow.webContents.send('convert-error')
-        }
-      })
-
-    ffmpegInstance.run()
-    resolve('success')
-  })
-})
-
-const initMessageChannelMain = () => {
-  const { port1, port2 } = new MessageChannelMain()
-
-  console.log('port1port1')
-  mainWindow?.webContents.postMessage('main-world-port', null, [port1])
-  childWindow?.webContents.postMessage('convert-world-port', null, [port2])
-}
 
 //屏幕截图
 ipcMain.handle('screenshot', async (_event) => {

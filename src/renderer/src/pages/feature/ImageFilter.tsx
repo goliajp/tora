@@ -18,7 +18,7 @@ const ImageFilter = observer(() => {
 
   const applyFilter = () => {
     // 点击按钮时才导入Photon库并应用滤镜
-    import('@silvia-odwyer/photon').then((photon) => {
+    import('@/renderer/src/plugins/photon/photon_rs').then((photon) => {
       const ctx = canvas.current?.getContext('2d') as CanvasRenderingContext2D
       const image = photon.open_image(canvas.current!, ctx)
 

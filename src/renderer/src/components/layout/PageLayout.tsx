@@ -3,11 +3,12 @@ import clsx from 'clsx'
 import { appStore } from '@/renderer/src/store/app.ts'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import route, { RouteInfo } from '@/renderer/src/constants/route.tsx'
-import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import ReactMarkdown from 'react-markdown'
 import { useEffect, useState } from 'react'
+import rehypeRaw from 'rehype-raw'
+import remarkGfm from 'remark-gfm'
 
 const PageLayout = observer(() => {
   // const currentRoute = {}
@@ -73,6 +74,7 @@ const PageLayout = observer(() => {
           <ReactMarkdown
             className={clsx(['markdown-body', !isShowDocument && 'whitespace-nowrap'])}
             remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
             components={{
               code(props) {
                 const { children, className } = props

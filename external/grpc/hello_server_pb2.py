@@ -14,21 +14,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hello_server.proto\x12\x04tora\"\x19\n\x0b\x43hatMessage\x12\n\n\x02id\x18\x01 \x01(\t\"2\n\x11ServerInfoRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"3\n\x12ServerInfoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t2S\n\x0bHelloServer\x12\x44\n\rGetServerInfo\x12\x17.tora.ServerInfoRequest\x1a\x18.tora.ServerInfoResponse\"\x00\x32?\n\x0b\x43hatService\x12\x30\n\x04\x43hat\x12\x11.tora.ChatMessage\x1a\x11.tora.ChatMessage(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12hello_server.proto\x12\x04tora\"O\n\x12\x43hatMessageRequest\x12\x10\n\x08password\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x0c\n\x04user\x18\x03 \x01(\t\x12\x0b\n\x03key\x18\x04 \x01(\t\"f\n\x13\x43hatMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x14\n\x0cmessage_from\x18\x02 \x01(\t\x12\x0c\n\x04time\x18\x03 \x01(\t\x12\x0b\n\x03key\x18\x04 \x01(\t\x12\r\n\x05\x65rror\x18\x05 \x01(\t\"2\n\x11ServerInfoRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\"3\n\x12ServerInfoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t2\x94\x01\n\x0b\x43hatService\x12?\n\x04\x43hat\x12\x18.tora.ChatMessageRequest\x1a\x19.tora.ChatMessageResponse(\x01\x30\x01\x12\x44\n\rGetServerInfo\x12\x17.tora.ServerInfoRequest\x1a\x18.tora.ServerInfoResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'hello_server_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_CHATMESSAGE']._serialized_start=28
-  _globals['_CHATMESSAGE']._serialized_end=53
-  _globals['_SERVERINFOREQUEST']._serialized_start=55
-  _globals['_SERVERINFOREQUEST']._serialized_end=105
-  _globals['_SERVERINFORESPONSE']._serialized_start=107
-  _globals['_SERVERINFORESPONSE']._serialized_end=158
-  _globals['_HELLOSERVER']._serialized_start=160
-  _globals['_HELLOSERVER']._serialized_end=243
-  _globals['_CHATSERVICE']._serialized_start=245
-  _globals['_CHATSERVICE']._serialized_end=308
+  _globals['_CHATMESSAGEREQUEST']._serialized_start=28
+  _globals['_CHATMESSAGEREQUEST']._serialized_end=107
+  _globals['_CHATMESSAGERESPONSE']._serialized_start=109
+  _globals['_CHATMESSAGERESPONSE']._serialized_end=211
+  _globals['_SERVERINFOREQUEST']._serialized_start=213
+  _globals['_SERVERINFOREQUEST']._serialized_end=263
+  _globals['_SERVERINFORESPONSE']._serialized_start=265
+  _globals['_SERVERINFORESPONSE']._serialized_end=316
+  _globals['_CHATSERVICE']._serialized_start=319
+  _globals['_CHATSERVICE']._serialized_end=467
 # @@protoc_insertion_point(module_scope)

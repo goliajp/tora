@@ -2,16 +2,26 @@ syntax = "proto3";
 
 package tora;
 
-service HelloServer {
+
+
+service ChatService {
+  rpc Chat(stream ChatMessageRequest) returns (stream ChatMessageResponse);
   rpc GetServerInfo (ServerInfoRequest) returns (ServerInfoResponse) {}
 }
 
-service ChatService {
-  rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+message ChatMessageRequest {
+  string password = 1;
+  string type = 2;
+  string user = 3;
+  string key = 4;
 }
 
-message ChatMessage {
-  string id = 1;
+message ChatMessageResponse {
+  string message = 1;
+  string message_from = 2;
+  string time = 3;
+  string key = 4;
+  string error = 5;
 }
 
 message ServerInfoRequest {

@@ -30,78 +30,6 @@ if _version_not_supported:
     )
 
 
-class HelloServerStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.GetServerInfo = channel.unary_unary(
-                '/tora.HelloServer/GetServerInfo',
-                request_serializer=hello__server__pb2.ServerInfoRequest.SerializeToString,
-                response_deserializer=hello__server__pb2.ServerInfoResponse.FromString,
-                _registered_method=True)
-
-
-class HelloServerServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def GetServerInfo(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_HelloServerServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'GetServerInfo': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetServerInfo,
-                    request_deserializer=hello__server__pb2.ServerInfoRequest.FromString,
-                    response_serializer=hello__server__pb2.ServerInfoResponse.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'tora.HelloServer', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('tora.HelloServer', rpc_method_handlers)
-
-
- # This class is part of an EXPERIMENTAL API.
-class HelloServer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def GetServerInfo(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/tora.HelloServer/GetServerInfo',
-            hello__server__pb2.ServerInfoRequest.SerializeToString,
-            hello__server__pb2.ServerInfoResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-
 class ChatServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
@@ -113,8 +41,13 @@ class ChatServiceStub(object):
         """
         self.Chat = channel.stream_stream(
                 '/tora.ChatService/Chat',
-                request_serializer=hello__server__pb2.ChatMessage.SerializeToString,
-                response_deserializer=hello__server__pb2.ChatMessage.FromString,
+                request_serializer=hello__server__pb2.ChatMessageRequest.SerializeToString,
+                response_deserializer=hello__server__pb2.ChatMessageResponse.FromString,
+                _registered_method=True)
+        self.GetServerInfo = channel.unary_unary(
+                '/tora.ChatService/GetServerInfo',
+                request_serializer=hello__server__pb2.ServerInfoRequest.SerializeToString,
+                response_deserializer=hello__server__pb2.ServerInfoResponse.FromString,
                 _registered_method=True)
 
 
@@ -127,13 +60,24 @@ class ChatServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetServerInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ChatServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Chat': grpc.stream_stream_rpc_method_handler(
                     servicer.Chat,
-                    request_deserializer=hello__server__pb2.ChatMessage.FromString,
-                    response_serializer=hello__server__pb2.ChatMessage.SerializeToString,
+                    request_deserializer=hello__server__pb2.ChatMessageRequest.FromString,
+                    response_serializer=hello__server__pb2.ChatMessageResponse.SerializeToString,
+            ),
+            'GetServerInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetServerInfo,
+                    request_deserializer=hello__server__pb2.ServerInfoRequest.FromString,
+                    response_serializer=hello__server__pb2.ServerInfoResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -161,8 +105,35 @@ class ChatService(object):
             request_iterator,
             target,
             '/tora.ChatService/Chat',
-            hello__server__pb2.ChatMessage.SerializeToString,
-            hello__server__pb2.ChatMessage.FromString,
+            hello__server__pb2.ChatMessageRequest.SerializeToString,
+            hello__server__pb2.ChatMessageResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetServerInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/tora.ChatService/GetServerInfo',
+            hello__server__pb2.ServerInfoRequest.SerializeToString,
+            hello__server__pb2.ServerInfoResponse.FromString,
             options,
             channel_credentials,
             insecure,
