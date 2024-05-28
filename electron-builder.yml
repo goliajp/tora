@@ -55,8 +55,10 @@ masDev:
 
 linux:
   target:
+    - target: AppImage
+      arch: universal
 #    - AppImage
-    - snap
+#    - snap
 #    - deb
 appImage:
   artifactName: ${name}-${version}.${ext}
