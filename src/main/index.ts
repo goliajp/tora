@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   nativeTheme,
+  pushNotifications,
   shell,
   Tray
 } from 'electron'
@@ -24,20 +25,23 @@ import * as os from 'node:os'
 import Screenshots from 'electron-screenshots'
 import { registerGrpcHandler } from './grpc-handler.ts'
 import { registerFfmpegHandler } from './ffmpeg-handler.ts'
+// import * as process from 'node:process'
 
 let mainWindow: BrowserWindow | null = null
 
 let tray: Tray | null = null
 
-//push notification
-// pushNotifications.registerForAPNSNotifications().then((token) => {
-//   // 转发令牌到您的远程通知服务器
-//   console.log(token, 'token')
-// })
-// pushNotifications.on('received-apns-notification', (event, userInfo) => {
-//   // 通过相关用户信息字段生成一个新的通知对象
-//   console.log(event, userInfo, 'userInfo')
-// })
+if (process.platform === 'darwin') {
+  //push notification
+  pushNotifications.registerForAPNSNotifications().then((token) => {
+    // 转发令牌到您的远程通知服务器
+    console.log(token, 'token')
+  })
+  pushNotifications.on('received-apns-notification', (event, userInfo) => {
+    // 通过相关用户信息字段生成一个新的通知对象
+    console.log(event, userInfo, 'userInfo')
+  })
+}
 
 //python test url
 const server = 'http://127.0.0.1:8000'
@@ -70,6 +74,9 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    titleBarStyle: 'hidden',
+    minWidth: 640,
+    trafficLightPosition: { x: 20, y: 10 }, //偏移量
     show: false,
     resizable: true,
     autoHideMenuBar: true,
@@ -227,6 +234,7 @@ app.on('window-all-closed', () => {
   }
 })
 
+//获取性能信息
 ipcMain.handle('get-performance-info', async () => {
   return await pidusage(process.pid)
 })
@@ -246,6 +254,7 @@ ipcMain.handle('dark-mode:system', () => {
 })
 //system theme end
 
+//打开文件
 ipcMain.handle(
   'show-open-dialog',
   (
@@ -276,6 +285,7 @@ ipcMain.handle(
   }
 )
 
+//保存文件
 ipcMain.handle(
   'save-file',
   (
@@ -309,6 +319,7 @@ ipcMain.handle(
   }
 )
 
+//读取文件
 ipcMain.handle(
   'read-entire-file',
   async (_event, filePath, encoding?: undefined | BufferEncoding) => {
@@ -322,13 +333,13 @@ ipcMain.handle(
   }
 )
 
+//获取app版本
 ipcMain.handle('get-app-version', async (_event) => {
   return app.getVersion()
 })
 
+//获取app信息
 ipcMain.handle('get-app-info', async (_event) => {
-  // console.log(app)
-  // console.log(os)
   return {
     appName: app.getName(),
     version: app.getVersion(),
@@ -337,6 +348,7 @@ ipcMain.handle('get-app-info', async (_event) => {
   }
 })
 
+//打开外部链接
 ipcMain.handle('open-external', async (_event, url: string) => {
   return await shell.openExternal(url)
 })
@@ -344,9 +356,6 @@ ipcMain.handle('open-external', async (_event, url: string) => {
 //屏幕截图
 ipcMain.handle('screenshot', async (_event) => {
   const screenshot = new Screenshots()
-  screenshot.startCapture()
+  await screenshot.startCapture()
   return
 })
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.

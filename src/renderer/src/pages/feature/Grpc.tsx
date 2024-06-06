@@ -6,7 +6,6 @@ const Grpc = observer(() => {
   const [key, setKey] = useState('')
 
   useEffect(() => {
-    // sendProto().then()
     getProto().then()
     return () => {
       breakMessage().then()

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { formatSize } from '@/renderer/src/utils'
 import useMessagePort from '@/renderer/src/hooks/UseMessagePort.tsx'
 
@@ -43,6 +43,17 @@ const Ffmpeg = observer(() => {
       }
     }
   }
+
+  useEffect(() => {
+    document.addEventListener('paste', async (e) => {
+      const files = e.clipboardData!.files
+      if (files.length > 0) {
+        const filePath = files[0]
+        const res = await window.electron.ipcRenderer.invoke('ffmpeg-read-file', filePath.path)
+        setVideo(res)
+      }
+    })
+  }, [])
 
   return (
     <div>

@@ -1,7 +1,7 @@
 import route from '@/renderer/src/constants/route'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../../../resources/icon.png'
-import { AiOutlineMoon, AiOutlineSun, AiOutlineTranslation } from 'react-icons/ai'
+import { AiOutlineMoon, AiOutlinePlus, AiOutlineSun, AiOutlineTranslation } from 'react-icons/ai'
 import { appStore } from '../store/app.ts'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
@@ -12,12 +12,17 @@ export const LeftRoute = observer(() => {
   const { t, i18n } = useTranslation()
   const [isShowMenu, setIsShowMenu] = useState(false)
   const navigate = useNavigate()
+  const [isRotated, setIsRotated] = useState(false)
+
+  const handleClick = () => {
+    setIsRotated(true)
+  }
 
   return (
-    <div className="flex-col flex justify-between items-center h-full min-w-[130px] py-8 bg-[#d69db8] bg-gradient-to-b from-[#ddc9b8]">
+    <div className="flex-col flex justify-between items-center h-full min-w-[100px] pb-8 pt-4 bg-[#d69db8] bg-gradient-to-b from-[#ddc9b8]">
       <div>
         {/*logo */}
-        <div className="mb-4 flex justify-center">
+        <div className="mb-8 flex justify-center">
           <img src={logo} alt="" />
         </div>
 
@@ -31,9 +36,26 @@ export const LeftRoute = observer(() => {
                 className="text-[#3d2912] text-xl flex flex-col items-center mb-4"
               >
                 {item.icon && (
-                  <item.icon className="group-hover:bg-[rgba(0,0,0,.2)] p-1 text-3xl rounded group-hover:text-4xl h-9 transition-all" />
+                  <div
+                    className={clsx([
+                      'size-9 rounded group-hover:bg-[rgba(0,0,0,.2)] flex justify-center items-center transition-all',
+                      appStore.routeInfo?.name === item.name && 'bg-[rgba(0,0,0,.2)]'
+                    ])}
+                  >
+                    {appStore.routeInfo?.name === item.name
+                      ? item.selectIcon && (
+                          <item.selectIcon
+                            className={clsx(['p-1 text-3xl group-hover:text-4xl transition-all'])}
+                          />
+                        )
+                      : item.icon && (
+                          <item.icon
+                            className={clsx(['p-1 text-3xl group-hover:text-4xl transition-all'])}
+                          />
+                        )}
+                  </div>
                 )}
-                <span className="text-sm pt-1">
+                <span className="text-xs pt-1">
                   {t(`menu.${item.name}`) ?? item.path.substring(1)}
                 </span>
               </Link>
@@ -42,8 +64,26 @@ export const LeftRoute = observer(() => {
         })}
       </div>
       <div>
+        <div
+          className={clsx([
+            'size-8 mb-4 rounded-full bg-[rgba(0,0,0,.1)] flex justify-center items-center cursor-pointer group hover:bg-[rgba(0,0,0,.2)]',
+            isRotated && '!bg-[rgba(0,0,0,.5)]'
+          ])}
+          onClick={handleClick}
+          onMouseLeave={() => setIsRotated(false)}
+        >
+          <AiOutlinePlus
+            className={clsx([
+              'size-4 text-[#3d2912] group-hover:text-white',
+              isRotated && 'rotate-45'
+            ])}
+            style={{
+              transition: 'transform .32s cubic-bezier(.34,1.56,.64,1)'
+            }}
+          />
+        </div>
         <AiOutlineTranslation
-          className="hover:bg-[rgba(0,0,0,.2)] p-1 text-3xl rounded size-9 transition-all text-white cursor-pointer"
+          className="hover:bg-[rgba(0,0,0,.2)] p-1 text-3xl rounded size-9 text-white cursor-pointer"
           onClick={async () => {
             await i18n.changeLanguage(i18n.language === 'zh' ? 'en' : 'zh')
           }}

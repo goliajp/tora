@@ -8,7 +8,7 @@ const SubRoute = observer(() => {
   const location = useLocation()
   return (
     <Resizable
-      className="h-full flex flex-col items-center py-6 left-0 top-0 bg-[#fbf9f8] shadow overflow-hidden"
+      className="h-full flex flex-col items-center py-6 left-0 top-0 bg-[#fbf9f8] overflow-hidden"
       defaultSize={{
         width: 140,
         height: '100%'
@@ -37,15 +37,14 @@ const SubRoute = observer(() => {
                 item.path === location.pathname && 'bg-[#e8e2dc]'
               ])}
             >
-              {/*{item.icon && (*/}
-              {/*  <item.icon className="group-hover:bg-[rgba(0,0,0,.2)] p-1 text-3xl rounded group-hover:text-4xl h-9 transition-all" />*/}
-              {/*)}*/}
-
               <span className="text-sm mt-1">{item.name}</span>
             </Link>
           )
         })}
       </div>
+      {/*<div className="group absolute right-0 w-1 top-0 h-full">*/}
+      {/*  <div className="size-full bg-[#5499cd] z-40 group-hover:bg-[#ccc222]"></div>*/}
+      {/*</div>*/}
     </Resizable>
   )
 })

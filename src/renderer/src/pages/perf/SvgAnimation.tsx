@@ -5,7 +5,7 @@ const animationTime = 1
 const SvgAnimation = observer(() => {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 flex-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1300" viewBox="0 0 20 20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 20 20">
         <path d="M2 2L10 2" stroke="red" strokeWidth="2.4" strokeLinecap="round">
           <animate
             attributeName="d"
@@ -58,7 +58,7 @@ const SvgAnimation = observer(() => {
           />
         </path>
       </svg>{' '}
-      <svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1300" viewBox="0 0 20 20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 20 20">
         <path d="M2 2L10 2" stroke="red" strokeWidth="2.4" strokeLinecap="round">
           <animate
             attributeName="d"
@@ -111,7 +111,7 @@ const SvgAnimation = observer(() => {
           />
         </path>
       </svg>{' '}
-      <svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1300" viewBox="0 0 20 20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 20 20">
         <path d="M2 2L10 2" stroke="red" strokeWidth="2.4" strokeLinecap="round">
           <animate
             attributeName="d"
@@ -164,7 +164,7 @@ const SvgAnimation = observer(() => {
           />
         </path>
       </svg>{' '}
-      <svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1300" viewBox="0 0 20 20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 20 20">
         <path d="M2 2L10 2" stroke="red" strokeWidth="2.4" strokeLinecap="round">
           <animate
             attributeName="d"
@@ -217,7 +217,7 @@ const SvgAnimation = observer(() => {
           />
         </path>
       </svg>{' '}
-      <svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1300" viewBox="0 0 20 20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 20 20">
         <path d="M2 2L10 2" stroke="red" strokeWidth="2.4" strokeLinecap="round">
           <animate
             attributeName="d"
@@ -270,7 +270,7 @@ const SvgAnimation = observer(() => {
           />
         </path>
       </svg>{' '}
-      <svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1300" viewBox="0 0 20 20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 20 20">
         <path d="M2 2L10 2" stroke="red" strokeWidth="2.4" strokeLinecap="round">
           <animate
             attributeName="d"

@@ -22,27 +22,32 @@ const PageLayout = observer(() => {
   const [isShowDocument, setIsShowDocument] = useState(false)
 
   return (
-    <div className="size-full">
+    <div
+      className="w-full h-auto relative"
+      style={{
+        boxShadow: '0 4px #0000000d,0 0 20px #0000001a'
+      }}
+    >
       <div
         className={clsx([
-          'size-full overflow-auto relative flex',
+          'size-full relative flex',
           appStore.themeMode === 'dark' && 'bg-gray-500'
         ])}
       >
         {/* content */}
         <div
           className={clsx([
-            'h-full px-5 flex flex-col transition-all',
+            'h-full px-5 flex flex-col transition-all  min-w-[200px]',
             isShowDocument ? 'w-1/2 border-r border-solid' : 'w-full border-none'
           ])}
         >
-          <header className="border-b border-solid h-[10%] flex items-center justify-between flex-wrap">
+          <header className="border-b border-solid h-16 flex items-center justify-between flex-wrap">
             <h1 className="font-bold">{currentRoute?.name}</h1>
             <button onClick={() => setIsShowDocument(!isShowDocument)}>
               {isShowDocument ? '关闭' : '打开'}文档
             </button>
           </header>
-          <div className="h-4/5 overflow-auto my-4  relative">
+          <div className="h-[calc(100%-4rem)] overflow-auto my-4  relative">
             <Routes>
               {route.map((item, index) => {
                 return (
@@ -69,7 +74,7 @@ const PageLayout = observer(() => {
 
         {/* markdown */}
         <div
-          className={clsx(['h-screen overflow-hidden', isShowDocument ? 'w-1/2 p-4' : 'w-0 py-4'])}
+          className={clsx(['h-full overflow-hidden', isShowDocument ? 'w-1/2 p-4' : 'w-0 py-4'])}
         >
           <ReactMarkdown
             className={clsx(['markdown-body', !isShowDocument && 'whitespace-nowrap'])}

@@ -81,18 +81,13 @@ export const registerGrpcHandler = (mainWindow: BrowserWindow) => {
 
         call?.write({ password: '123456', type: 'auth', user: 'electron-tora', key })
 
-        // setTimeout(() => {
-        //   if (call) {
-        //     console.log('exit')
-        //     call.write({ password: '123456', type: 'exit', user: 'electron-tora', key })
-        //   }
-        // }, 5000)
-
         if (call) {
           resolve('success')
         } else {
           reject('error')
         }
+      }).catch((err) => {
+        console.error('Error:', err)
       })
     }
   )

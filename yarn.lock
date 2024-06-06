@@ -6850,6 +6850,11 @@ synckit@^0.8.6:
     "@pkgr/core" "^0.1.0"
     tslib "^2.6.2"
 
+tailwindcss-animated@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-animated/-/tailwindcss-animated-1.1.0.tgz#d03494143d56985db54c151bc34f3ec62329d5a9"
+  integrity sha512-2j2MHdlypqaqz5ymcGFAiLjYdyy/9M3aMqa4SKSQqyQnMyUIUDx/3orLyuUop5i2FucdzYXVwexSSU7Q1b0VCw==
+
 tailwindcss@^3.4.3:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.4.3.tgz#be48f5283df77dfced705451319a5dffb8621519"

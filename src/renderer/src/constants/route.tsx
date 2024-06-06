@@ -9,7 +9,14 @@ import SvgAnimation from '@/renderer/src/pages/perf/SvgAnimation.tsx'
 import CssAnimation from '@/renderer/src/pages/perf/CssAnimation.tsx'
 import Tour from '@/renderer/src/pages/feature/Tour.tsx'
 import Login from '@/renderer/src/pages/feature/Login.tsx'
-import { AiOutlineHome, AiOutlineReddit, AiOutlineTool } from 'react-icons/ai'
+import {
+  AiFillBulb,
+  AiFillHome,
+  AiFillTool,
+  AiOutlineBulb,
+  AiOutlineHome,
+  AiOutlineTool
+} from 'react-icons/ai'
 import { IconBaseProps } from 'react-icons'
 import Markdown from '@/renderer/src/pages/feature/Markdown.tsx'
 import ImageFilter from '@/renderer/src/pages/feature/ImageFilter.tsx'
@@ -28,6 +35,7 @@ export type RouteInfo = {
   children?: RouteInfo[]
   component?: ComponentType
   icon?: IconComponentType
+  selectIcon?: IconComponentType
   name?: string
   redirect?: string
   markdown?: string
@@ -38,7 +46,8 @@ const route: RouteInfo[] = [
     name: 'home',
     path: '/',
     component: Home,
-    icon: AiOutlineHome
+    icon: AiOutlineHome,
+    selectIcon: AiFillHome
   },
   // {
   //   name: 'about',
@@ -49,7 +58,8 @@ const route: RouteInfo[] = [
   {
     name: 'feature',
     path: '/feature',
-    icon: AiOutlineReddit,
+    icon: AiOutlineBulb,
+    selectIcon: AiFillBulb,
     redirect: '/feature/tour',
     children: [
       {
@@ -121,6 +131,7 @@ const route: RouteInfo[] = [
     path: '/perf',
     redirect: '/perf/long-list',
     icon: AiOutlineTool,
+    selectIcon: AiFillTool,
     children: [
       {
         name: '长列表',

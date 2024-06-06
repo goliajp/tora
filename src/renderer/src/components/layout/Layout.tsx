@@ -6,6 +6,7 @@ import { PerformanceInfo } from '@/renderer/src/components/PerformanceInfo.tsx'
 import { useLocation } from 'react-router-dom'
 import { appStore } from '@/renderer/src/store/app.ts'
 import route from '@/renderer/src/constants/route.tsx'
+import Header from '@/renderer/src/components/Header.tsx'
 
 const Layout = observer(() => {
   //刚进入页面时，将当前页面加入到 RouteInfo 中
@@ -21,15 +22,18 @@ const Layout = observer(() => {
   }, [location])
 
   return (
-    <div className="flex h-full">
-      {appStore.routeInfo && (
-        <>
-          <LeftRoute />
-          <SubRoute />
-          <PageLayout />
-          <PerformanceInfo />
-        </>
-      )}
+    <div className="h-full">
+      <Header />
+      <div className="flex h-[calc(100%-2.5rem)]">
+        {appStore.routeInfo && (
+          <>
+            <LeftRoute />
+            <SubRoute />
+            <PageLayout />
+            <PerformanceInfo />
+          </>
+        )}
+      </div>
     </div>
   )
 })
