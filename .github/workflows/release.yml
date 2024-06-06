@@ -24,5 +24,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Install dmg-license
+        run: yarn add dmg-license --optional
+
       - name: Build
         run: yarn build:mac
