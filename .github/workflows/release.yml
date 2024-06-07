@@ -33,9 +33,10 @@ jobs:
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           ARCH=$(uname -m)
           VERSION=$(jq -r .version package.json)
-          FILENAME="${PLATFORM}/${ARCH}/${VERSION}/linux-unpacked.zip"
+          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}.zip"
           zip -r $FILENAME ./dist/linux-unpacked
           echo "::set-output name=FILENAME::$FILENAME"
+        shell: /usr/bin/bash -e {0}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
