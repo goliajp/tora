@@ -10,7 +10,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     steps:
       - name: Checkout code
@@ -25,7 +28,12 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build:linux
+        run: |
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            yarn build:linux
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            yarn build:mac
+          fi
 
       - name: Zip the build
         id: zip_build
@@ -33,8 +41,14 @@ jobs:
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           ARCH=$(uname -m)
           VERSION=$(jq -r .version package.json)
-          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}.zip"
-          zip -r $FILENAME ./dist/linux-unpacked
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}.zip"
+            DIR="linux-unpacked"
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}.zip"
+            DIR="mac-unpacked"
+          fi
+          zip -r $FILENAME ./dist/$DIR
           echo "::set-output name=FILENAME::$FILENAME"
         shell: /usr/bin/bash -e {0}
 
@@ -46,4 +60,5 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: Upload to S3
-        run: aws s3 cp ./${{ steps.zip_build.outputs.FILENAME }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_build.outputs.FILENAME }}
+        run: |
+          aws s3 cp ./${{ steps.zip_build.outputs.FILENAME }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_build.outputs.FILENAME }}
