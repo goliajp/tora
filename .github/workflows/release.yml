@@ -76,3 +76,4 @@ jobs:
           if [ -n "${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}" ]; then
             aws s3 cp ./${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}
           fisteps.zip_build.outputs.FILENAME }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_build.outputs.FILENAME }}
+          fi
