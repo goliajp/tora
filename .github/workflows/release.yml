@@ -9,11 +9,8 @@ on:
       - '*'
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+  build-linux:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -27,38 +24,41 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build
-        run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            yarn build:linux
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            yarn build:mac
-          fi
-#      - name: Configure macOS certificate
-#        if: matrix.os == 'macos-latest'
-#        run: |
-#          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
-#          security create-keychain -p actions build.keychain
-#          security import certificate.p12 -k build.keychain -P "${{ secrets.MACOS_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
-#          security list-keychain -d user -s build.keychain
-#          security unlock-keychain -p actions build.keychain
-#          security set-key-partition-list -S apple-tool:,apple: -s -k actions build.keychain
+      - name: Build Linux
+        run: yarn build:linux
 
-      - name: Zip the build
-        id: zip_build
+      - name: Zip the linux-unpacked build
         run: |
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           ARCH=$(uname -m)
           VERSION=$(jq -r .version package.json)
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}.zip"
-            DIR="linux-unpacked"
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}.zip"
-            DIR="mac-unpacked"
+          DIR="linux-unpacked"
+          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}-${DIR}.zip"
+          if [ -d "./dist/$DIR" ]; then
+            zip -r $FILENAME ./dist/$DIR
+            echo "::set-output name=FILENAME1::$FILENAME"
+          else
+            echo "Error: Directory ./dist/$DIR does not exist."
+            exit 1
           fi
-          zip -r $FILENAME ./dist/$DIR
-          echo "::set-output name=FILENAME::$FILENAME"
+        id: zip_linux_unpacked
+        shell: /usr/bin/bash -e {0}
+
+      - name: Zip the linux-arm64-unpacked build
+        run: |
+          PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
+          ARCH=$(uname -m)
+          VERSION=$(jq -r .version package.json)
+          DIR="linux-arm64-unpacked"
+          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}-${DIR}.zip"
+          if [ -d "./dist/$DIR" ]; then
+            zip -r $FILENAME ./dist/$DIR
+            echo "::set-output name=FILENAME2::$FILENAME"
+          else
+            echo "Error: Directory ./dist/$DIR does not exist."
+            exit 1
+          fi
+        id: zip_linux_arm64_unpacked
         shell: /usr/bin/bash -e {0}
 
       - name: Configure AWS credentials
@@ -70,4 +70,9 @@ jobs:
 
       - name: Upload to S3
         run: |
-          aws s3 cp ./${{ steps.zip_build.outputs.FILENAME }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_build.outputs.FILENAME }}
+          if [ -n "${{ steps.zip_linux_unpacked.outputs.FILENAME1 }}" ]; then
+            aws s3 cp ./${{ steps.zip_linux_unpacked.outputs.FILENAME1 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_unpacked.outputs.FILENAME1 }}
+          fi
+          if [ -n "${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}" ]; then
+            aws s3 cp ./${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}
+          fisteps.zip_build.outputs.FILENAME }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_build.outputs.FILENAME }}
