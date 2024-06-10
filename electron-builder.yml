@@ -70,7 +70,7 @@ linux:
 #    - snap
 #    - deb
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${platform}-${version}-${arch}.${ext}
 npmRebuild: false
 snap:
   confinement: strict

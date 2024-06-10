@@ -27,39 +27,45 @@ jobs:
       - name: Build Linux
         run: yarn build:linux
 
-      - name: Zip the linux-unpacked build
+      - name: Find the AppImage files
+        id: find_AppImage
         run: |
-          PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
-          ARCH=$(uname -m)
-          VERSION=$(jq -r .version package.json)
-          DIR="linux-unpacked"
-          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}-${DIR}.zip"
-          if [ -d "./dist/$DIR" ]; then
-            zip -r $FILENAME ./dist/$DIR
-            echo "::set-output name=FILENAME1::$FILENAME"
-          else
-            echo "Error: Directory ./dist/$DIR does not exist."
-            exit 1
-          fi
-        id: zip_linux_unpacked
-        shell: /usr/bin/bash -e {0}
-
-      - name: Zip the linux-arm64-unpacked build
-        run: |
-          PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
-          ARCH=$(uname -m)
-          VERSION=$(jq -r .version package.json)
-          DIR="linux-arm64-unpacked"
-          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}-${DIR}.zip"
-          if [ -d "./dist/$DIR" ]; then
-            zip -r $FILENAME ./dist/$DIR
-            echo "::set-output name=FILENAME2::$FILENAME"
-          else
-            echo "Error: Directory ./dist/$DIR does not exist."
-            exit 1
-          fi
-        id: zip_linux_arm64_unpacked
-        shell: /usr/bin/bash -e {0}
+          find dist -name "*.AppImage" > AppImage_files.txt
+          cat AppImage_files.txt
+        shell: bash
+#      - name: Zip the linux-unpacked build
+#        run: |
+#          PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
+#          ARCH=$(uname -m)
+#          VERSION=$(jq -r .version package.json)
+#          DIR="linux-unpacked"
+#          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}-${DIR}.zip"
+#          if [ -d "./dist/$DIR" ]; then
+#            zip -r $FILENAME ./dist/$DIR
+#            echo "::set-output name=FILENAME1::$FILENAME"
+#          else
+#            echo "Error: Directory ./dist/$DIR does not exist."
+#            exit 1
+#          fi
+#        id: zip_linux_unpacked
+#        shell: /usr/bin/bash -e {0}
+#
+#      - name: Zip the linux-arm64-unpacked build
+#        run: |
+#          PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
+#          ARCH=$(uname -m)
+#          VERSION=$(jq -r .version package.json)
+#          DIR="linux-arm64-unpacked"
+#          FILENAME="electron-tora-${PLATFORM}-${ARCH}-${VERSION}-${DIR}.zip"
+#          if [ -d "./dist/$DIR" ]; then
+#            zip -r $FILENAME ./dist/$DIR
+#            echo "::set-output name=FILENAME2::$FILENAME"
+#          else
+#            echo "Error: Directory ./dist/$DIR does not exist."
+#            exit 1
+#          fi
+#        id: zip_linux_arm64_unpacked
+#        shell: /usr/bin/bash -e {0}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -70,11 +76,16 @@ jobs:
 
       - name: Upload to S3
         run: |
-          if [ -n "${{ steps.zip_linux_unpacked.outputs.FILENAME1 }}" ]; then
-            aws s3 cp ./${{ steps.zip_linux_unpacked.outputs.FILENAME1 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_unpacked.outputs.FILENAME1 }}
-          fi
-          if [ -n "${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}" ]; then
-            aws s3 cp ./${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}
+          while IFS= read -r AppImage_FILE; do
+            aws s3 cp "$AppImage_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$AppImage_FILE")
+          done < AppImage_files.txt
+        shell: bash
+#        run: |
+#          if [ -n "${{ steps.zip_linux_unpacked.outputs.FILENAME1 }}" ]; then
+#            aws s3 cp ./${{ steps.zip_linux_unpacked.outputs.FILENAME1 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_unpacked.outputs.FILENAME1 }}
+#          fi
+#          if [ -n "${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}" ]; then
+#            aws s3 cp ./${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}
 #          fi
   build-mac:
     runs-on: macos-latest
