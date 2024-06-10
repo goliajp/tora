@@ -31,19 +31,21 @@ mac:
 #    - target: mas-dev
 #      arch: universal
     - target: dmg
-      arch: universal
+      arch:
+        - x64
+        - arm64
   provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
   notarize: true
 dmg:
-  artifactName: ${name}-${version}.${ext}
-mas:
-  hardenedRuntime: false
-  type: distribution
-  identity: "GOLIA K.K. (KF79DRC524)"
-  entitlements: build/mas/entitlements.mas.plist
-  entitlementsInherit: build/mas/entitlements.mas.inherit.plist
-  entitlementsLoginHelper: build/mas/entitlements.mas.loginhelper.plist
-  provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
+  artifactName: ${name}-${version}-${arch}.${ext}
+#mas:
+#  hardenedRuntime: false
+#  type: distribution
+#  identity: "GOLIA K.K. (KF79DRC524)"
+#  entitlements: build/mas/entitlements.mas.plist
+#  entitlementsInherit: build/mas/entitlements.mas.inherit.plist
+#  entitlementsLoginHelper: build/mas/entitlements.mas.loginhelper.plist
+#  provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
 masDev:
   hardenedRuntime: false
   type: development

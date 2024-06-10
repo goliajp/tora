@@ -76,3 +76,40 @@ jobs:
           if [ -n "${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}" ]; then
             aws s3 cp ./${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }} s3://cdn-golia/downloads/electron-tora/${{ steps.zip_linux_arm64_unpacked.outputs.FILENAME2 }}
           fi
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Mac
+        run: yarn build:mac
+
+      - name: Find the DMG files
+        id: find_dmg
+        run: |
+          DMG_FILES=$(ls dist/*.dmg)
+          echo "::set-output name=DMG_FILES::$DMG_FILES"
+        shell: /usr/bin/bash -e {0}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: Upload to S3
+        run: |
+          for DMG_FILE in ${{ steps.find_dmg.outputs.DMG_FILES }}; do
+            aws s3 cp $DMG_FILE s3://cdn-golia/downloads/electron-tora/$(basename $DMG_FILE)
+          done
