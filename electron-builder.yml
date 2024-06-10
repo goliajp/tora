@@ -37,14 +37,17 @@ mac:
 #      arch: universal
 #    - target: mas-dev
 #      arch: universal
-    - target: dmg
+    - target: zip
       arch:
         - x64
         - arm64
   provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
   notarize: true
+  artifactName: ${name}-${platform}-${version}-${arch}.${ext}
 dmg:
   artifactName: ${name}-${platform}-${version}-${arch}.${ext}
+#zip:
+#  artifactName: ${name}-${platform}-${version}-${arch}.${ext}
 #mas:
 #  hardenedRuntime: false
 #  type: distribution
