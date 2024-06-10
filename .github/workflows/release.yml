@@ -90,10 +90,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
-      - name: Upload DMG files to S3
+#      - name: Upload DMG files to S3
+#        run: |
+#          while IFS= read -r DMG_FILE; do
+#            aws s3 cp "$DMG_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$DMG_FILE")
+#          done < dmg_files.txt
+#        shell: bash
+
+      - name: Upload individual DMG files as ZIP to S3
         run: |
           while IFS= read -r DMG_FILE; do
-            aws s3 cp "$DMG_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$DMG_FILE")
+            ZIP_FILE="${DMG_FILE%.dmg}.zip"
+            zip "$ZIP_FILE" "$DMG_FILE"
+            aws s3 cp "$ZIP_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$ZIP_FILE")
           done < dmg_files.txt
         shell: bash
 
@@ -104,6 +113,7 @@ jobs:
           echo "{\"${PLATFORM}_version\": \"$VERSION\"}" > version.json
           aws s3 cp version.json s3://cdn-golia/downloads/electron-tora/${PLATFORM}_version.json
         shell: bash
+
 
 #  build-win:
 #    runs-on: windows-latest
