@@ -99,7 +99,7 @@ jobs:
         run: |
           find dist -name "*.dmg" > dmg_files.txt
           cat dmg_files.txt
-        shell: /usr/bin/bash -e {0}
+        shell: bash
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -113,4 +113,4 @@ jobs:
           while IFS= read -r DMG_FILE; do
             aws s3 cp "$DMG_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$DMG_FILE")
           done < dmg_files.txt
-        shell: /usr/bin/bash -e {0}
+        shell: bash
