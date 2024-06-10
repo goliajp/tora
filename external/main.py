@@ -38,9 +38,9 @@ async def websocket_endpoint(websocket: WebSocket):
 # }
 
 latest_version = "1.0.1"
+url = "https://cdn.golia.jp/downloads/electron-tora"
 
-
-@app.get("/update/{platform}/{version}")
+@app.get("/update/{platform}//{version}")
 async def check_for_updates(platform: str, version: str):
     # 检查客户端版本是否低于服务器的最新版本
     if version < latest_version:

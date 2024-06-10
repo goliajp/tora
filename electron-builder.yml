@@ -25,6 +25,8 @@ nsis:
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+msi:
+  artifactName: ${name}-${platform}-${version}-${arch}.${ext}
 mac:
   category: public.app-category.developer-tools
   identity: "wen shuai (ABXHL289T9)"
