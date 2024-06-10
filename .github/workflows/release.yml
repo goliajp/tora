@@ -101,8 +101,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build Mac
-        run: yarn build:mac
+      - name: Build Windows
+        run: yarn build:win
 
       - name: Find the MSI files
         id: find_msi
