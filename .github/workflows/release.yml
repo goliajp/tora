@@ -98,7 +98,7 @@ jobs:
         id: find_dmg
         run: |
           DMG_FILES=$(ls dist/*.dmg)
-          echo "::set-output name=DMG_FILES::$DMG_FILES"
+          echo "DMG_FILES=$DMG_FILES" >> $GITHUB_ENV
         shell: /usr/bin/bash -e {0}
 
       - name: Configure AWS credentials
@@ -110,6 +110,7 @@ jobs:
 
       - name: Upload to S3
         run: |
-          for DMG_FILE in ${{ steps.find_dmg.outputs.DMG_FILES }}; do
+          for DMG_FILE in $DMG_FILES; do
             aws s3 cp $DMG_FILE s3://cdn-golia/downloads/electron-tora/$(basename $DMG_FILE)
           done
+        shell: /usr/bin/bash -e {0}
