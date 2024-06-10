@@ -41,12 +41,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
-      - name: Upload AppImage files to S3
+      - name: Upload individual AppImage files as ZIP to S3
         run: |
           while IFS= read -r AppImage_FILE; do
-            aws s3 cp "$AppImage_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$AppImage_FILE")
+            ZIP_FILE="${AppImage_FILE%.AppImage}.zip"
+            zip "$ZIP_FILE" "$AppImage_FILE"
+            aws s3 cp "$ZIP_FILE" s3://cdn-golia/downloads/electron-tora/$(basename "$ZIP_FILE")
           done < AppImage_files.txt
         shell: bash
+
 
       - name: Generate version.json and upload to S3
         run: |
