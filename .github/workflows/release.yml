@@ -54,7 +54,7 @@ jobs:
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           echo "{\"${PLATFORM}_version\": \"$VERSION\"}" > version.json
           aws s3 cp version.json s3://cdn-golia/downloads/electron-tora/${PLATFORM}_version.json
-          shell: bash
+        shell: bash
   build-mac:
     runs-on: macos-latest
 
@@ -100,7 +100,7 @@ jobs:
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           echo "{\"${PLATFORM}_version\": \"$VERSION\"}" > version.json
           aws s3 cp version.json s3://cdn-golia/downloads/electron-tora/${PLATFORM}_version.json
-          shell: bash
+        shell: bash
 
 #  build-win:
 #    runs-on: windows-latest
