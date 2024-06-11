@@ -116,6 +116,7 @@ jobs:
         run: |
           VERSION=$(jq -r .version package.json)
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
+          echo "Platform is: ${PLATFORM}"
           echo "{\"${PLATFORM}_version\": \"$VERSION\"}" > version.json
         shell: bash
 
@@ -127,6 +128,7 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
+          PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           scp -i ~/.ssh/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/${PLATFORM}_version.json
         shell: bash
 #      - name: Generate version.json and upload to S3
