@@ -110,7 +110,7 @@ jobs:
         run: |
           while IFS= read -r DMG_FILE; do
             aws s3 cp "$DMG_FILE" s3://cdn-golia/electron-tora/downloads/$(basename "$DMG_FILE")
-          done < dmg_files.txt
+          done < dmg_and_zip_files.txt
         shell: bash
 
       - name: Generate version.json
