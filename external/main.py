@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi import WebSocket
 from fastapi.responses import JSONResponse
+# from fastapi.responses import FileResponse
 import os
 
 import asyncio
@@ -32,36 +33,26 @@ async def websocket_endpoint(websocket: WebSocket):
         await asyncio.sleep(1 / 100)
 
 
-# # 假设的最新版本信息
-# latest_version_info = {
-#     "latest_version": "1.0.1",
-#     "url": "http://127.0.0.1:8000/download/platform/1.0.1"
-# }
-
-
-url = "https://cdn.golia.jp/downloads/electron-tora"
+app_url = "https://cdn.golia.jp/downloads/electron-tora"
+json_url = "https://data.golia.jp/electron-tora/darwin_version.json"
 
 
 @app.get("/update/{platform}/{arch}/{version}")
 async def check_for_updates(platform: str, version: str, arch: str):
-    # latest_version取自https://cdn.golia.jp/downloads/electron-tora/darwin_version.json的darwin_version字段
-
-    json_url = "https://data.golia.jp/electron-tora/darwin_version.json"
     response = requests.get(json_url)
 
     if response.status_code == 200:
         latest_version = response.json()[f"{platform}_version"]
-        # latest_version = "1.0.5"
 
         print(latest_version, 'last')
 
         # 检查客户端版本是否低于服务器的最新版本
         if version < latest_version:
 
-            print(f"http://127.0.0.1:8000/download/{platform}/{arch}/{latest_version}", 'url')
+            print(f"{app_url}/electron-tora-{platform}-{latest_version}-{arch}.zip", 'url')
             # 如果需要更新，返回更新详情
             return {
-                "url": f"http://127.0.0.1:8000/download/{platform}/{arch}/{latest_version}",
+                "url": f"{app_url}/electron-tora-{platform}-{latest_version}-{arch}.zip",
                 "name": latest_version,
                 # 可以根据实际需要添加其他字段，比如更新的说明、大小等
             }
@@ -71,17 +62,3 @@ async def check_for_updates(platform: str, version: str, arch: str):
     else:
         # 如果不需要更新，通过状态码 204 表明没有内容响应
         raise HTTPException(status_code=204)
-
-
-# 对于下载链接, 使用了路由路径参数来动态获取版本号
-@app.get("/download/{platform}/{arch}/{version}")
-async def download_file(platform: str, version: str, arch: str):
-    # 下面我们构造了文件的完整路径
-    # 根据不同的 platform 返回不同的文件
-    file_path = f"{url}/electron-tora-{platform}-{version}-{arch}.zip"
-    filename = f"electron-tora-{platform}-{version}-{arch}.zip"
-
-    print(file_path, 'file_path')
-    return JSONResponse({"url": file_path, "name": filename})
-
-#   uvicorn main:app --reload
