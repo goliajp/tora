@@ -112,17 +112,15 @@ jobs:
           done < dmg_files.txt
         shell: bash
 
-      - name: Set up SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Generate version.json
         run: |
           VERSION=$(jq -r .version package.json)
           PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')
           echo "{\"${PLATFORM}_version\": \"$VERSION\"}" > version.json
         shell: bash
+
+      - name: Add SSH key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws.pem && chmod 600 ~/.ssh/aws.pem
 
       - name: Upload version.json via SCP
         env:

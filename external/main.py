@@ -46,12 +46,12 @@ url = "https://cdn.golia.jp/downloads/electron-tora"
 async def check_for_updates(platform: str, version: str, arch: str):
     # latest_version取自https://cdn.golia.jp/downloads/electron-tora/darwin_version.json的darwin_version字段
 
-    json_url = f"{url}/{platform}_version.json"
+    json_url = "https://data.golia.jp/electron-tora/darwin_version.json"
     response = requests.get(json_url)
 
     if response.status_code == 200:
-        # latest_version = response.json()[f"{platform}_version"]
-        latest_version = "1.0.5"
+        latest_version = response.json()[f"{platform}_version"]
+        # latest_version = "1.0.5"
 
         print(latest_version, 'last')
 
