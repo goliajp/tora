@@ -15,8 +15,8 @@ dist-ssr
 
 # electron
 out
-build
-!build/**/icon*
+#build
+#!build/**/icon*
 
 # Editor directories and files
 .vscode/*
