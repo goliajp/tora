@@ -73,6 +73,21 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Decode and Import Certificate
+        run: |
+          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+          security create-keychain -p github-action macos-build.keychain
+          security import certificate.p12 -k macos-build.keychain -P ${{ secrets.MACOS_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+          security list-keychains -d user -s macos-build.keychain
+          security set-keychain-settings -t 3600 -u macos-build.keychain
+          security unlock-keychain -p github-action macos-build.keychain
+        shell: bash
+
+      - name: Set Keychain for Code Signing
+        run: |
+          security set-key-partition-list -S apple-tool:,apple: -s -k github-action macos-build.keychain
+        shell: bash
+
       - name: Build Mac
         run: yarn build:mac
 

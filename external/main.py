@@ -50,8 +50,8 @@ async def check_for_updates(platform: str, version: str, arch: str):
     response = requests.get(json_url)
 
     if response.status_code == 200:
-        latest_version = response.json()[f"{platform}_version"]
-        # latest_version = "1.0.3"
+        # latest_version = response.json()[f"{platform}_version"]
+        latest_version = "1.0.4"
 
         print(latest_version, 'last')
 
