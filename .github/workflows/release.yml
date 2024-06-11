@@ -94,7 +94,7 @@ jobs:
       - name: Find the DMG files
         id: find_dmg
         run: |
-          find dist -name "*.dmg" > dmg_files.txt
+          find dist -name "*.zip" > dmg_files.txt
           cat dmg_files.txt
         shell: bash
 
