@@ -33,7 +33,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await asyncio.sleep(1 / 100)
 
 
-app_url = "https://cdn.golia.jp/downloads/electron-tora"
+app_url = "https://cdn.golia.jp/electron-tora/downloads"
 json_url = "https://data.golia.jp/electron-tora/darwin_version.json"
 
 

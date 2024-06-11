@@ -73,6 +73,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      # macOS signing
       - name: Decode and Import Certificate
         run: |
           echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
@@ -91,11 +92,11 @@ jobs:
       - name: Build Mac
         run: yarn build:mac
 
-      - name: Find the DMG files
-        id: find_dmg
+      - name: Find the DMG and ZIP files
+        id: find_dmg_and_zip
         run: |
-          find dist -name "*.zip" > dmg_files.txt
-          cat dmg_files.txt
+          find dist \( -name "*.zip" -o -name "*.dmg" \) > dmg_and_zip_files.txt
+          cat dmg_and_zip_files.txt
         shell: bash
 
       - name: Configure AWS credentials

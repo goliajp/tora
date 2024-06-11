@@ -41,6 +41,10 @@ mac:
       arch:
         - x64
         - arm64
+    - target: dmg
+      arch:
+        - x64
+        - arm64
   provisioningProfile: build/mas/ElectronToraDistribution.provisionprofile
   notarize: true
   artifactName: ${name}-${platform}-${version}-${arch}.${ext}
