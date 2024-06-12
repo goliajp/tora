@@ -41,6 +41,7 @@
     "clsx": "^2.1.1",
     "currency.js": "^2.0.4",
     "dayjs": "^1.11.11",
+    "electron-builder-squirrel-windows": "^25.0.0-alpha.9",
     "electron-log": "^5.1.2",
     "electron-screenshots": "^0.5.26",
     "electron-updater": "^6.1.8",

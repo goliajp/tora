@@ -16,7 +16,7 @@ asar: true
 win:
   executableName: electron-tora
   target:
-    - target: msi
+    - target: squirrel
       arch:
        - x64
        - arm64
