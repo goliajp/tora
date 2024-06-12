@@ -196,7 +196,7 @@ jobs:
       - name: Add SSH key
         run: |
             echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "C:\\aws.pem" -Encoding ascii
-            icacls "C:\\aws.pem" /inheritance:r /grant:r "$env:USERNAME:(R,W)"
+            icacls "C:\\aws.pem" /inheritance:r /grant:r "$($env:USERNAME):(F)"
         shell: pwsh
 
       - name: Upload version.json via SCP
