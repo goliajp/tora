@@ -16,39 +16,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '21'
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build Linux
-        run: yarn build:linux
-
-      - name: Find the AppImage files
-        id: find_AppImage
-        run: |
-          find dist -name "*.AppImage" > AppImage_files.txt
-          cat AppImage_files.txt
-        shell: bash
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
-
-      - name: Upload individual AppImage files as ZIP to S3
-        run: |
-          while IFS= read -r AppImage_FILE; do
-            ZIP_FILE="${AppImage_FILE%.AppImage}.zip"
-            zip -j "$ZIP_FILE" "$AppImage_FILE"
-            aws s3 cp "$ZIP_FILE" s3://cdn-golia/electron-tora/downloads/$(basename "$ZIP_FILE")
-          done < AppImage_files.txt
-        shell: bash
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: '21'
+#
+#      - name: Install dependencies
+#        run: yarn install
+#
+#      - name: Build Linux
+#        run: yarn build:linux
+#
+#      - name: Find the AppImage files
+#        id: find_AppImage
+#        run: |
+#          find dist -name "*.AppImage" > AppImage_files.txt
+#          cat AppImage_files.txt
+#        shell: bash
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ap-northeast-1
+#
+#      - name: Upload individual AppImage files as ZIP to S3
+#        run: |
+#          while IFS= read -r AppImage_FILE; do
+#            ZIP_FILE="${AppImage_FILE%.AppImage}.zip"
+#            zip -j "$ZIP_FILE" "$AppImage_FILE"
+#            aws s3 cp "$ZIP_FILE" s3://cdn-golia/electron-tora/downloads/$(basename "$ZIP_FILE")
+#          done < AppImage_files.txt
+#        shell: bash
 
   build-mac:
     runs-on: macos-latest
@@ -57,52 +57,52 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '21'
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Decode and Import Certificate
-        run: |
-          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
-          security create-keychain -p github-action macos-build.keychain
-          security import certificate.p12 -k macos-build.keychain -P ${{ secrets.MACOS_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
-          security list-keychains -d user -s macos-build.keychain
-          security set-keychain-settings -t 3600 -u macos-build.keychain
-          security unlock-keychain -p github-action macos-build.keychain
-        shell: bash
-
-      - name: Set Keychain for Code Signing
-        run: |
-          security set-key-partition-list -S apple-tool:,apple: -s -k github-action macos-build.keychain
-        shell: bash
-
-      - name: Build Mac
-        run: yarn build:mac
-
-      - name: Find the DMG and ZIP files
-        id: find_dmg_and_zip
-        run: |
-          find dist \( -name "*.zip" -o -name "*.dmg" \) > dmg_and_zip_files.txt
-          cat dmg_and_zip_files.txt
-        shell: bash
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
-
-      - name: Upload DMG files to S3
-        run: |
-          while IFS= read -r DMG_FILE; do
-            aws s3 cp "$DMG_FILE" s3://cdn-golia/electron-tora/downloads/$(basename "$DMG_FILE")
-          done < dmg_and_zip_files.txt
-        shell: bash
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: '21'
+#
+#      - name: Install dependencies
+#        run: yarn install
+#
+#      - name: Decode and Import Certificate
+#        run: |
+#          echo "${{ secrets.MACOS_CERTIFICATE }}" | base64 --decode > certificate.p12
+#          security create-keychain -p github-action macos-build.keychain
+#          security import certificate.p12 -k macos-build.keychain -P ${{ secrets.MACOS_CERTIFICATE_PASSWORD }} -T /usr/bin/codesign
+#          security list-keychains -d user -s macos-build.keychain
+#          security set-keychain-settings -t 3600 -u macos-build.keychain
+#          security unlock-keychain -p github-action macos-build.keychain
+#        shell: bash
+#
+#      - name: Set Keychain for Code Signing
+#        run: |
+#          security set-key-partition-list -S apple-tool:,apple: -s -k github-action macos-build.keychain
+#        shell: bash
+#
+#      - name: Build Mac
+#        run: yarn build:mac
+#
+#      - name: Find the DMG and ZIP files
+#        id: find_dmg_and_zip
+#        run: |
+#          find dist \( -name "*.zip" -o -name "*.dmg" \) > dmg_and_zip_files.txt
+#          cat dmg_and_zip_files.txt
+#        shell: bash
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ap-northeast-1
+#
+#      - name: Upload DMG files to S3
+#        run: |
+#          while IFS= read -r DMG_FILE; do
+#            aws s3 cp "$DMG_FILE" s3://cdn-golia/electron-tora/downloads/$(basename "$DMG_FILE")
+#          done < dmg_and_zip_files.txt
+#        shell: bash
 
   build-win:
     runs-on: windows-latest
@@ -111,29 +111,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '21'
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build Windows
-        run: yarn build:win
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
-
-      - name: Upload Squirrel Windows and Squirrel Windows Arm64 folders to S3
-        run: |
-          aws s3 cp dist/squirrel-windows s3://cdn-golia/electron-tora/downloads/squirrel-windows --recursive
-          aws s3 cp dist/squirrel-windows-arm64 s3://cdn-golia/electron-tora/downloads/squirrel-windows-arm64 --recursive
-        shell: bash
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: '21'
+#
+#      - name: Install dependencies
+#        run: yarn install
+#
+#      - name: Build Windows
+#        run: yarn build:win
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ap-northeast-1
+#
+#      - name: Upload Squirrel Windows and Squirrel Windows Arm64 folders to S3
+#        run: |
+#          aws s3 cp dist/squirrel-windows s3://cdn-golia/electron-tora/downloads/squirrel-windows --recursive
+#          aws s3 cp dist/squirrel-windows-arm64 s3://cdn-golia/electron-tora/downloads/squirrel-windows-arm64 --recursive
+#        shell: bash
 
   update-versions:
     runs-on: ubuntu-latest
@@ -165,10 +165,13 @@ jobs:
           echo "{\"${PLATFORM}_version\": \"$VERSION\"}" > version.json
           aws s3 cp version.json s3://cdn-golia/electron-tora/versions/${PLATFORM}_version.json
 
+      - name: Create SSH directory
+        run: mkdir -p ~/keys
+
       - name: Add SSH key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws.pem
-          chmod 600 ~/.ssh/aws.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/keys/aws.pem
+          chmod 600 ~/keys/aws.pem
 
       - name: Upload version.json via SCP
         env:
@@ -182,4 +185,4 @@ jobs:
           if [ "$PLATFORM" = "windows" ]; then
             PLATFORM="win32"
           fi
-          scp -i ~/.ssh/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/${PLATFORM}_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/${PLATFORM}_version.json
