@@ -193,15 +193,10 @@ jobs:
           $content | Set-Content version.json
         shell: pwsh
 
-      - name: Create .ssh directory
-        run: |
-          New-Item -ItemType Directory -Path "$env:USERPROFILE\\.ssh" -Force
-        shell: pwsh
-
       - name: Add SSH key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "$env:USERPROFILE\\.ssh\\aws.pem" -Encoding ascii
-          chmod 600 $env:USERPROFILE\\.ssh\\aws.pem
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "C:\\aws.pem" -Encoding ascii
+            icacls "C:\\aws.pem" /inheritance:r /grant:r "$env:USERNAME:(R,W)"
         shell: pwsh
 
       - name: Upload version.json via SCP
@@ -209,5 +204,8 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i $env:USERPROFILE\\.ssh\\aws.pem -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/win32_version.json
+          $sshKeyPath = "C:\\aws.pem"
+          Write-Output "Using SSH key path: $sshKeyPath"
+          Write-Output "Uploading version.json to $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/win32_version.json"
+          scp -i $sshKeyPath -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/win32_version.json
         shell: pwsh
