@@ -20,11 +20,13 @@ win:
       arch:
        - x64
        - arm64
-nsis:
-  artifactName: ${name}-${platform}-${version}-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
+squirrelWindows:
+  artifactName: ${name}-${platform}-${version}-${arch}.${ext}
+#nsis:
+#  artifactName: ${name}-${platform}-${version}-setup.${ext}
+#  shortcutName: ${productName}
+#  uninstallDisplayName: ${productName}
+#  createDesktopShortcut: always
 msi:
   artifactName: ${name}-${platform}-${version}-${arch}.${ext}
 mac:
