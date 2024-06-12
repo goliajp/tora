@@ -189,9 +189,7 @@ jobs:
       - name: Generate version.json
         run: |
           $version = (Get-Content package.json | ConvertFrom-Json).version
-          $platform = "win32"
-          Write-Output ("Platform is: $platform")
-          $content = "{`"$($platform)_version`": `"$version`"}"
+          $content = "{`"win32_version`": `"$version`"}"
           $content | Set-Content version.json
         shell: pwsh
 
@@ -211,6 +209,5 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          $platform = "win32"
-          scp -i $env:USERPROFILE\\.ssh\\aws.pem -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/$platform_version.json
+          scp -i $env:USERPROFILE\\.ssh\\aws.pem -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/win32_version.json
         shell: pwsh
