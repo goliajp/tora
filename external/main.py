@@ -49,13 +49,17 @@ async def check_for_updates(platform: str, version: str, arch: str):
         # 检查客户端版本是否低于服务器的最新版本
         if version < latest_version:
 
-            print(f"{app_url}/electron-tora-{platform}-{latest_version}-{arch}.zip", 'url')
-            # 如果需要更新，返回更新详情
-            return {
-                "url": f"{app_url}/electron-tora-{platform}-{latest_version}-{arch}.zip",
-                "name": latest_version,
-                # 可以根据实际需要添加其他字段，比如更新的说明、大小等
-            }
+            if platform == 'win32':
+                #如果是x64，则文件夹地址是 squirrel-windows 如果是arm，则是 ssquirrel-windows-arm64
+                if arch == 'x64':
+                    return f"https://cdn.golia.jp/electron-tora/downloads/squirrel-windows"
+                else:
+                    return f"https://cdn.golia.jp/electron-tora/downloads/squirrel-windows-arm64"
+            else:
+                return {
+                    "url": f"{app_url}/electron-tora-{platform}-{latest_version}-{arch}.zip",
+                    "name": latest_version,
+                }
         else:
             # 如果不需要更新，通过状态码 204 表明没有内容响应
             raise HTTPException(status_code=204)
