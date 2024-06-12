@@ -149,15 +149,18 @@ jobs:
           echo "{\"linux_version\": \"$VERSION\"}" > version.json
         shell: bash
 
+      - name: Create SSH directory
+        run: mkdir -p ~/keys
+
       - name: Add SSH key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws.pem && chmod 600 ~/.ssh/aws.pem
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/keys/aws.pem && chmod 600 ~/keys/aws.pem
 
       - name: Upload version.json via SCP
         env:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i ~/.ssh/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$linux_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$linux_version.json
         shell: bash
 
   update-versions-mac:
@@ -174,15 +177,18 @@ jobs:
           echo "{\"darwin_version\": \"$VERSION\"}" > version.json
         shell: bash
 
+      - name: Create SSH directory
+        run: mkdir -p ~/keys
+
       - name: Add SSH key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws.pem && chmod 600 ~/.ssh/aws.pem
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/keys/aws.pem && chmod 600 ~/keys/aws.pem
 
       - name: Upload version.json via SCP
         env:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i ~/.ssh/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$darwin_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$darwin_version.json
         shell: bash
 
   update-versions-win:
@@ -199,13 +205,16 @@ jobs:
           echo "{\"win32_version\": \"$VERSION\"}" > version.json
         shell: bash
 
+      - name: Create SSH directory
+        run: mkdir -p ~/keys
+
       - name: Add SSH key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws.pem && chmod 600 ~/.ssh/aws.pem
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/keys/aws.pem && chmod 600 ~/keys/aws.pem
 
       - name: Upload version.json via SCP
         env:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i ~/.ssh/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$win32_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$win32_version.json
         shell: bash
