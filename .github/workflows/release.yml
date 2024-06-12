@@ -207,7 +207,7 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          $scpCmd = "winscp.com /command `""open sftp://$env:REMOTE_USER@$env:REMOTE_HOST -privatekey=`"C:\\aws.pem`"" `""put version.json /app/data/electron-tora/win32_version.json`"" `""exit`"""
+          $scpCmd = "winscp.com /command `"open sftp://$env:REMOTE_USER@$env:REMOTE_HOST -privatekey=`"C:\\aws.pem`" `"put version.json /app/data/electron-tora/win32_version.json`" `"exit`""
           Write-Output "Running WinSCP command: $scpCmd"
           Invoke-Expression $scpCmd
         shell: pwsh
