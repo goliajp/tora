@@ -160,7 +160,7 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$linux_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/linux_version.json
         shell: bash
 
   update-versions-mac:
@@ -188,7 +188,7 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$darwin_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/darwin_version.json
         shell: bash
 
   update-versions-win:
@@ -216,5 +216,5 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/$win32_version.json
+          scp -i ~/keys/aws.pem -o StrictHostKeyChecking=no version.json ${REMOTE_USER}@${REMOTE_HOST}:/app/data/electron-tora/win32_version.json
         shell: bash
