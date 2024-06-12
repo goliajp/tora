@@ -211,6 +211,6 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          $platform = "windows"
+          $platform = "win32"
           scp -i $env:USERPROFILE\\.ssh\\aws.pem -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/$platform_version.json
         shell: pwsh
