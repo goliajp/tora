@@ -195,7 +195,7 @@ jobs:
 
       - name: Add SSH key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "C:\\aws.pem" -Encoding ascii
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | Set-Content -Path "C:\\aws.pem" -Encoding ascii
           icacls "C:\\aws.pem" /inheritance:r /grant:r "$($env:USERNAME):(F)"
         shell: pwsh
 
@@ -207,7 +207,7 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          $scpCmd = "winscp.com /command `""open sftp://$env:REMOTE_USER@$env:REMOTE_HOST -privatekey=""C:\\aws.pem""`"" `""put version.json /app/data/electron-tora/win32_version.json`"" `""exit`"""
+          $scpCmd = "winscp.com /command `""open sftp://$env:REMOTE_USER@$env:REMOTE_HOST -privatekey=`"C:\\aws.pem`"" `""put version.json /app/data/electron-tora/win32_version.json`"" `""exit`"""
           Write-Output "Running WinSCP command: $scpCmd"
           Invoke-Expression $scpCmd
         shell: pwsh
