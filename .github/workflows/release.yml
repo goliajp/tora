@@ -195,6 +195,11 @@ jobs:
           $content | Set-Content version.json
         shell: pwsh
 
+      - name: Create .ssh directory
+        run: |
+          New-Item -ItemType Directory -Path "$env:USERPROFILE\\.ssh"
+        shell: pwsh
+
       - name: Add SSH key
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "$env:USERPROFILE\\.ssh\\aws.pem" -Encoding ascii
         shell: pwsh
