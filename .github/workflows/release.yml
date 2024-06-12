@@ -189,7 +189,7 @@ jobs:
       - name: Generate version.json
         run: |
           $version = (Get-Content package.json | ConvertFrom-Json).version
-          $platform = (Get-ComputerInfo).OsName.ToLower()
+          $platform = "win32"
           Write-Output ("Platform is: $platform")
           $content = "{`"$($platform)_version`": `"$version`"}"
           $content | Set-Content version.json
@@ -197,11 +197,13 @@ jobs:
 
       - name: Create .ssh directory
         run: |
-          New-Item -ItemType Directory -Path "$env:USERPROFILE\\.ssh"
+          New-Item -ItemType Directory -Path "$env:USERPROFILE\\.ssh" -Force
         shell: pwsh
 
       - name: Add SSH key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "$env:USERPROFILE\\.ssh\\aws.pem" -Encoding ascii
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | Out-File -FilePath "$env:USERPROFILE\\.ssh\\aws.pem" -Encoding ascii
+          chmod 600 $env:USERPROFILE\\.ssh\\aws.pem
         shell: pwsh
 
       - name: Upload version.json via SCP
@@ -209,6 +211,6 @@ jobs:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          $platform = (Get-ComputerInfo).OsName.ToLower()
+          $platform = "windows"
           scp -i $env:USERPROFILE\\.ssh\\aws.pem -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/$platform_version.json
         shell: pwsh
