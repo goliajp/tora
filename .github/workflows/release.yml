@@ -199,14 +199,15 @@ jobs:
           icacls "C:\\aws.pem" /inheritance:r /grant:r "$($env:USERNAME):(F)"
         shell: pwsh
 
-      - name: Upload version.json via SCP
+      - name: Install WinSCP
+        run: choco install winscp
+
+      - name: Upload version.json via WinSCP
         env:
           REMOTE_USER: root
           REMOTE_HOST: t01.golia.jp
         run: |
-          $sshKeyPath = "C:\\aws.pem"
-          Write-Output "Using SSH key path: $sshKeyPath"
-          Write-Output "Uploading version.json to $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/win32_version.json"
-          Get-ChildItem -Path . -Name
-          scp -i $sshKeyPath -o StrictHostKeyChecking=no version.json $env:REMOTE_USER@$env:REMOTE_HOST:/app/data/electron-tora/win32_version.json
+          $scpCmd = "winscp.com /command `""open sftp://$env:REMOTE_USER@$env:REMOTE_HOST -privatekey=""C:\\aws.pem""`"" `""put version.json /app/data/electron-tora/win32_version.json`"" `""exit`"""
+          Write-Output "Running WinSCP command: $scpCmd"
+          Invoke-Expression $scpCmd
         shell: pwsh
