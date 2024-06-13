@@ -1,6 +1,6 @@
 {
   "name": "electron-tora",
-  "version": "1.0.7",
+  "version": "1.0.2",
   "packageManager": "yarn@1.22.22",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
