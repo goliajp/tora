@@ -2,6 +2,7 @@ import { app, autoUpdater, dialog } from 'electron'
 import log from 'electron-log'
 import * as os from 'node:os'
 
+
 export const setupAutoUpdater = (server: string) => {
   const feed = `${server}/update/${process.platform}/${os.arch()}/${app.getVersion()}`
 

@@ -27,6 +27,9 @@ import { registerGrpcHandler } from './grpc-handler.ts'
 import { registerFfmpegHandler } from './ffmpeg-handler.ts'
 // import * as process from 'node:process'
 
+
+if(require('electron-squirrel-startup')) app.quit()
+
 let mainWindow: BrowserWindow | null = null
 
 let tray: Tray | null = null
@@ -83,10 +86,11 @@ function createWindow(): void {
     // ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
     }
   })
 
+  mainWindow.webContents.openDevTools()
   // 检查更新
   if (import.meta.env.MODE !== 'development') {
     setupAutoUpdater(server)

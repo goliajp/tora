@@ -44,6 +44,7 @@
     "electron-builder-squirrel-windows": "^25.0.0-alpha.9",
     "electron-log": "^5.1.2",
     "electron-screenshots": "^0.5.26",
+    "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.1.8",
     "ffmpeg-static": "^5.2.0",
     "ffprobe-static": "^3.1.0",

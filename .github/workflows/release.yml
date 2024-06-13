@@ -3,7 +3,7 @@ name: Release Workflow
 on:
   push:
     branches:
-      - develop
+      - release
   create:
     tags:
       - '*'
